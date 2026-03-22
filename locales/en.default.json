@@ -1,8 +1,13 @@
 {
-  "404": {
-    "title": "404",
-    "not_found": "Page not found.",
-    "back_to_shopping": "Back to shopping"
+  "general": {
+    "menu": "Menu"
+  },
+  "templates": {
+    "404": {
+      "title": "Back to Shop",
+      "subtext": "Page Not Found",
+      "not_found": "404 - Page not found."
+    }
   },
   "blog": {
     "article_comments": "Comments",
@@ -17,7 +22,10 @@
     "checkout": "Checkout",
     "title": "Cart",
     "update": "Update",
-    "remove": "Remove"
+    "remove": "Remove",
+    "general": {
+      "taxes_and_shipping_at_checkout": "Taxes & shipping calculated at checkout"
+    }
   },
   "customers": {
     "login": {

@@ -427,7 +427,7 @@
           <span class="sw-stock-dot"></span> In stock, ready to ship
         </div>
 
-        <form method="post" action="/cart/add" id="product-form-{{ section.id }}" accept-charset="UTF-8" class="sw-product-form" enctype="multipart/form-data">
+        <form method="post" action="{{ routes.cart_add_url }}" id="product-form-{{ section.id }}" accept-charset="UTF-8" class="sw-product-form" enctype="multipart/form-data">
           <input type="hidden" name="form_type" value="product">
           <input type="hidden" name="utf8" value="✓">
           <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" id="sw-master-id-{{ section.id }}">

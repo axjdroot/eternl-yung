@@ -160,12 +160,12 @@
   {%- if section.settings.mode == 'split' -%}
     <div class="sw-drop-split {% if section.settings.image_position == 'right' %}sw-drop-split--right{% endif %}">
       <div class="sw-drop-split__media">
-        {%- if drop_image != blank -%}
-          {%- assign img_url = drop_image | image_url: width: 1200 -%}
           <img src='{{ img_url }}' 
                alt="{{ drop_heading | escape }}" 
                class="sw-drop-img" 
-               loading="lazy">
+               loading="lazy"
+               width="{{ drop_image.width | default: 800 }}"
+               height="{{ drop_image.height | default: 1000 }}">
         {%- else -%}
           {{ 'collection-2' | placeholder_svg_tag: 'sw-drop-img' }}
         {%- endif -%}
@@ -188,12 +188,12 @@
   {%- else -%}
     <div class="sw-drop-banner">
       <div class="sw-drop-banner__media">
-        {%- if drop_image != blank -%}
-          {%- assign img_url = drop_image | image_url: width: 2000 -%}
           <img src='{{ img_url }}' 
                alt="{{ drop_heading | escape }}" 
                class="sw-drop-img" 
-               loading="lazy">
+               loading="lazy"
+               width="{{ drop_image.width | default: 2000 }}"
+               height="{{ drop_image.height | default: 2000 }}">
         {%- else -%}
           {{ 'lifestyle-1' | placeholder_svg_tag: 'sw-drop-img' }}
         {%- endif -%}

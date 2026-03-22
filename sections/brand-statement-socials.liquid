@@ -45,7 +45,11 @@
   <div class="sw-container">
     {%- if section.settings.icon != blank -%}
       <div class="sw-bs-icon">
-        <img src="{{ section.settings.icon | image_url: width: 64 }}" alt="Brand Icon" style="width:100%; height:auto;">
+        <img src="{{ section.settings.icon | image_url: width: 64 }}" 
+             alt="Brand Icon" 
+             style="width:32px; height:32px;"
+             width="32"
+             height="32">
       </div>
     {%- else -%}
       <div class="sw-bs-icon">

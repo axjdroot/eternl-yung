@@ -1,10 +1,10 @@
-{% doc %}
-  Renders a product card for grids.
-  Aesthetic: Modern Y2K / Eternl Yung (Frosted glass, metallic accents, floating elements).
-  
-  @param {object} product - The product object
-  @param {boolean} [lazy_load=true] - Whether to lazy load the main image
+  @param product {Object} The product object
+  @param lazy_load {Boolean} Whether to lazy load the main image
 {% enddoc %}
+
+{%- liquid
+  assign lazy_load = lazy_load | default: true
+-%}
 
 <style>
   .sw-product-card-y2k {
