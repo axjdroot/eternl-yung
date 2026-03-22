@@ -1,6 +1,10 @@
+{% comment %}
+  Renders a product card for grids.
+  Aesthetic: Modern Y2K / Eternl Yung (Frosted glass, metallic accents, floating elements).
+  
   @param product {Object} The product object
   @param lazy_load {Boolean} Whether to lazy load the main image
-{% enddoc %}
+{% endcomment %}
 
 {%- liquid
   assign lazy_load = lazy_load | default: true

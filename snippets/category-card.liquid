@@ -1,8 +1,8 @@
-{% doc %}
+{% comment %}
   Renders a single category card tile.
   
   @param {object} block - The schema block object containing settings
-{% enddoc %}
+{% endcomment %}
 
 <a href="{{ block.settings.collection.url | default: '#' }}" class="sw-category-card" style="cursor: crosshair;">
   <div class="sw-category-card__media sw-category-card__media--{{ block.settings.aspect_ratio }}">
