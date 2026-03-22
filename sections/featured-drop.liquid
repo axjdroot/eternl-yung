@@ -160,6 +160,8 @@
   {%- if section.settings.mode == 'split' -%}
     <div class="sw-drop-split {% if section.settings.image_position == 'right' %}sw-drop-split--right{% endif %}">
       <div class="sw-drop-split__media">
+        {%- if drop_image != blank -%}
+          {%- assign img_url = drop_image | image_url: width: 1200 -%}
           <img src='{{ img_url }}' 
                alt="{{ drop_heading | escape }}" 
                class="sw-drop-img" 
@@ -188,6 +190,8 @@
   {%- else -%}
     <div class="sw-drop-banner">
       <div class="sw-drop-banner__media">
+        {%- if drop_image != blank -%}
+          {%- assign img_url = drop_image | image_url: width: 2000 -%}
           <img src='{{ img_url }}' 
                alt="{{ drop_heading | escape }}" 
                class="sw-drop-img" 
