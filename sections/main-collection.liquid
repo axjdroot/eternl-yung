@@ -1,0 +1,527 @@
+{%- style -%}
+  .sw-collection {
+    background-color: var(--color-bg);
+    min-height: 80vh;
+  }
+  
+  /* Banner */
+  .sw-collection__banner {
+    position: relative;
+    padding: var(--sp-20) 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 400px;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .sw-collection__banner-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    opacity: 0.6;
+    filter: saturate(1.2) contrast(1.1);
+  }
+
+  .sw-collection__banner-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%);
+    z-index: 2;
+  }
+
+  .sw-collection__banner-content {
+    position: relative;
+    z-index: 5;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 40px;
+    padding: var(--sp-12) var(--sp-8);
+    max-width: 1000px;
+    width: calc(100% - var(--sp-8));
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  }
+
+  .sw-collection__breadcrumb {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: #388D73;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: var(--sp-6);
+  }
+
+  .sw-collection__title {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 8vw, 96px);
+    color: #FFFFFF;
+    line-height: 0.95;
+    margin-bottom: var(--sp-6);
+    text-transform: uppercase;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .sw-collection__desc {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.6;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  /* Filter + Sort Bar */
+  /* Filter + Sort Bar (Redesigned Static) */
+  .sw-collection__toolbar {
+    margin: var(--sp-12) 0 var(--sp-6);
+    padding: var(--sp-4) 0;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-radius: 0;
+    width: 100%;
+    z-index: 10;
+    box-shadow: none;
+  }
+ 
+  .sw-toolbar__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--sp-6);
+  }
+
+  .sw-toolbar__groups {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+  }
+
+  .sw-toolbar__collections {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-4);
+  }
+
+  .sw-collection-link {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-muted);
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    cursor: pointer;
+  }
+
+  .sw-collection-link:hover,
+  .sw-collection-link.is-active {
+    color: var(--color-text);
+  }
+
+  .sw-collection-link.is-active {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    color: #388D73;
+  }
+
+  .sw-toolbar__bottom-row {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-6);
+  }
+
+  .sw-toolbar__count {
+    font-family: var(--font-display);
+    font-size: 20px;
+    line-height: 1;
+    color: var(--color-text);
+    text-transform: uppercase;
+  }
+
+  .sw-toolbar__filters {
+    display: flex;
+    gap: var(--sp-6);
+  }
+
+  .sw-filter-pill {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-muted);
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+
+  .sw-filter-pill:hover,
+  .sw-filter-pill.is-active {
+    color: var(--color-text);
+  }
+
+  .sw-filter-pill::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--color-text);
+    transition: width 0.3s ease;
+  }
+
+  .sw-filter-pill.is-active::after {
+    width: 100%;
+    background: #388D73;
+  }
+
+  .sw-toolbar__right {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--sp-6);
+  }
+
+  .sw-toolbar__sort-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-muted);
+    text-transform: uppercase;
+    margin-bottom: var(--sp-1);
+    display: block;
+  }
+
+  .sw-toolbar__sort select {
+    background: transparent;
+    border: none;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: var(--color-text);
+    outline: none;
+    padding: 0;
+  }
+
+  /* Grid Area */
+  .sw-collection__grid {
+    padding: var(--sp-8) 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  @media (min-width: 1024px) {
+    .sw-collection__grid {
+      padding: var(--sp-12) 0;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+    }
+  }
+
+  /* Pagination */
+  .sw-pagination {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: var(--sp-16);
+  }
+  .sw-pagination__progress {
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: var(--color-muted);
+    margin-bottom: var(--sp-4);
+  }
+  .sw-btn-load-more {
+    margin-top: var(--sp-8);
+  }
+  .sw-btn-load-more:hover {
+    background-color: var(--color-surface);
+  }
+  .sw-btn-load-more.is-loading {
+    color: transparent;
+    position: relative;
+    pointer-events: none;
+  }
+  .sw-btn-load-more.is-loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--color-text);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: sw-spin 0.8s linear infinite;
+  }
+  @media (min-width: 1024px) {
+    .sw-btn-load-more {
+      width: 240px;
+    }
+  }
+  @keyframes sw-spin {
+    to { transform: rotate(360deg); }
+  }
+{%- endstyle -%}
+
+{%- paginate collection.products by section.settings.products_per_page -%}
+
+<div class="sw-collection sw-reveal" data-section-id="{{ section.id }}">
+  
+  <header class="sw-collection__banner">
+    {%- if collection.image and section.settings.show_banner_image -%}
+      <img src="{{ collection.image | image_url: width: 2400 }}"
+           alt="{{ collection.title | escape }}"
+           class="sw-collection__banner-bg"
+           loading="eager"
+           decoding="async">
+      <div class="sw-collection__banner-overlay"></div>
+    {%- endif -%}
+
+    <div class="sw-container">
+      <div class="sw-collection__banner-content">
+        <nav class="sw-collection__breadcrumb" aria-label="breadcrumbs">
+          <a href="{{ routes.root_url }}">HOME</a> / <span>{{ collection.title }}</span>
+        </nav>
+        <h1 class="sw-collection__title">{{ collection.title | upcase }}</h1>
+        {%- if collection.description != blank and section.settings.show_description -%}
+          <div class="sw-collection__desc">{{ collection.description }}</div>
+        {%- endif -%}
+      </div>
+    </div>
+  </header>
+
+  <form class="sw-collection__toolbar" id="sw-collection-filters-form">
+    <div class="sw-container">
+      <div class="sw-toolbar__inner">
+        
+        <div class="sw-toolbar__left">
+          <div class="sw-toolbar__groups">
+            <div class="sw-toolbar__collections">
+              <a href="{{ routes.all_products_collection_url }}" class="sw-collection-link {% if collection.handle == 'all' %}is-active{% endif %}">ALL</a>
+              {%- for coll in collections -%}
+                {%- unless coll.handle == 'all' or coll.all_products_count == 0 -%}
+                  <a href="{{ coll.url }}" class="sw-collection-link {% if collection.handle == coll.handle %}is-active{% endif %}">{{ coll.title | upcase }}</a>
+                {%- endunless -%}
+              {%- endfor -%}
+            </div>
+
+            <div class="sw-toolbar__bottom-row">
+              <span class="sw-toolbar__count" id="sw-product-count">{{ collection.products_count }} PRODUCTS</span>
+              
+              <div class="sw-toolbar__filters">
+                {%- for filter in collection.filters -%}
+                  {%- if filter.type == 'list' or filter.type == 'boolean' -%}
+                    {%- for value in filter.values -%}
+                      <label class="sw-filter-pill {% if value.active %}is-active{% endif %}" for="Filter-{{ filter.param_name }}-{{ forloop.index }}">
+                        <input type="checkbox"
+                               name="{{ value.param_name }}"
+                               value="{{ value.value }}"
+                               id="Filter-{{ filter.param_name }}-{{ forloop.index }}"
+                               class="sw-sr-only"
+                               {% if value.active %}checked{% endif %}>
+                        {{ value.label }}
+                      </label>
+                    {%- endfor -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sw-toolbar__right">
+          <div class="sw-toolbar__sort">
+            <span class="sw-toolbar__sort-label">SORT BY</span>
+            <select id="sw-sort-by" form="sw-collection-filters-form">
+              {%- for option in collection.sort_options -%}
+                <option value="{{ option.value }}" {% if option.value == collection.sort_by or option.value == collection.default_sort_by %}selected="selected"{% endif %}>
+                  {{ option.name }}
+                </option>
+              {%- endfor -%}
+            </select>
+          </div>
+        </div>
+
+        <input type="hidden" name="sort_by" value="{{ collection.sort_by | default: collection.default_sort_by }}">
+        
+      </div>
+    </div>
+  </form>
+
+  <div class="sw-container">
+    <div class="sw-collection__grid" id="sw-product-grid">
+      {%- for product in collection.products -%}
+        {% render 'product-card', product: product, lazy_load: forloop.index > 4 %}
+      {%- else -%}
+        <p class="sw-u-muted" style="grid-column: 1 / -1; text-align: center; padding: 40px 0;">No products found.</p>
+      {%- endfor -%}
+    </div>
+
+    <div class="sw-pagination" id="sw-pagination-wrapper">
+      {%- if paginate.next -%}
+        <div class="sw-pagination__progress">
+          Showing {{ paginate.current_offset | plus: paginate.page_size | at_most: paginate.items }} of {{ paginate.items }} products
+        </div>
+        <button type="button" class="sw-btn sw-btn--primary sw-btn-load-more" data-url="{{ paginate.next.url }}">
+          LOAD MORE
+        </button>
+      {%- else -%}
+        <div class="sw-pagination__progress">
+          Showing all {{ paginate.items }} products
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+</div>
+{%- endpaginate -%}
+
+<script>
+  /* [PHASE 5] 2026-03-08 — Collection filters and Ajax Load More */
+  document.addEventListener('DOMContentLoaded', () => {
+    const filterForm = document.getElementById('sw-collection-filters-form');
+    const sortSelect = document.getElementById('sw-sort-by');
+    const grid = document.getElementById('sw-product-grid');
+    const paginationWrapper = document.getElementById('sw-pagination-wrapper');
+    const productCount = document.getElementById('sw-product-count');
+
+    // Debounce helper
+    function debounce(fn, wait) {
+      let t;
+      return (...args) => {
+        clearTimeout(t);
+        t = setTimeout(() => fn.apply(this, args), wait);
+      };
+    }
+
+    // Capture and apply filters
+    const applyFilters = debounce((url) => {
+      fetch(url)
+        .then(response => response.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          
+          const newGrid = doc.getElementById('sw-product-grid');
+          const newPagination = doc.getElementById('sw-pagination-wrapper');
+          const newCount = doc.getElementById('sw-product-count');
+
+          if (newGrid && grid) grid.innerHTML = newGrid.innerHTML;
+          if (newPagination && paginationWrapper) paginationWrapper.innerHTML = newPagination.innerHTML;
+          if (newCount && productCount) productCount.innerHTML = newCount.innerHTML;
+
+          window.history.replaceState({ path: url }, '', url);
+          attachLoadMore();
+        })
+        .catch(err => console.error('Filter error:', err));
+    }, 300);
+
+    // Form change event
+    if (filterForm) {
+      filterForm.addEventListener('change', (e) => {
+        const formData = new FormData(filterForm);
+        const searchParams = new URLSearchParams(formData);
+
+        // Update active class on pills visually
+        if (e.target.type === 'checkbox') {
+          const label = e.target.closest('label');
+          if (label) {
+            e.target.checked ? label.classList.add('is-active') : label.classList.remove('is-active');
+          }
+        }
+
+        // Sort sync
+        if (e.target.id === 'sw-sort-by') {
+          searchParams.set('sort_by', e.target.value);
+        }
+
+        const url = `${window.location.pathname}?${searchParams.toString()}`;
+        applyFilters(url);
+      });
+    }
+
+    // Load More functionality
+    function attachLoadMore() {
+      const loadMoreBtn = document.querySelector('.sw-btn-load-more');
+      if (!loadMoreBtn) return;
+
+      loadMoreBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const url = loadMoreBtn.getAttribute('data-url');
+        if (!url) return;
+
+        loadMoreBtn.classList.add('is-loading');
+
+        fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            
+            const newGridItems = doc.getElementById('sw-product-grid').children;
+            const newPagination = doc.getElementById('sw-pagination-wrapper');
+            
+            // Append new items
+            Array.from(newGridItems).forEach(item => {
+              grid.appendChild(item.cloneNode(true));
+            });
+
+            // Replace pagination HTML entirely
+            if (paginationWrapper && newPagination) {
+              paginationWrapper.innerHTML = newPagination.innerHTML;
+              attachLoadMore(); // Re-attach listener to the newly inserted button
+            }
+          })
+          .catch(err => {
+            console.error('Load more error:', err);
+            loadMoreBtn.classList.remove('is-loading');
+          });
+      });
+    }
+
+    attachLoadMore();
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Collection Template",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_banner_image",
+      "label": "Show collection image",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show collection description",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 12,
+      "max": 48,
+      "step": 4,
+      "label": "Products per page",
+      "default": 24
+    }
+  ]
+}
+{% endschema %}

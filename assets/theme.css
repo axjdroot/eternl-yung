@@ -1,0 +1,482 @@
+/* [PHASE 1] 2026-03-08 — Master stylesheet setup base on Design System */
+
+/* 1. Typography: @font-face */
+@font-face {
+  font-family: 'Pikabu';
+  src: url('./fonts/Pikabu.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Coolvetica';
+  src: url('./fonts/Coolvetica.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 2. Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Outfit:wght@300;400;600&family=Space+Grotesk:wght@600&family=Space+Mono&display=swap');
+
+/* 3. CSS Custom Properties */
+:root {
+  /* VOID Scheme (Default) */
+  --color-bg: #FFFFFF;
+  --color-text: #111111;
+  --color-muted: #777777;
+  --color-border: #1E1E1A;
+  --color-surface: #161616;
+
+  /* CHALK Scheme */
+  --color-bg-chalk: #F4F1EC;
+  --color-text-chalk: #0D0D0D;
+  --color-muted-chalk: #9A9690;
+  --color-border-chalk: #E2DFD9;
+  --color-surface-chalk: #EDEAE4;
+
+  /* ACCENT Scheme */
+  --color-bg-accent: #5fb8af;
+  --color-text-accent: #0D0D0D;
+  --color-muted-accent: #3A4A00;
+  --color-border-accent: #0D0D0D;
+
+  /* GHOST Scheme */
+  --color-bg-ghost: #131313;
+  --color-text-ghost: #7A7A75;
+  --color-muted-ghost: #3A3A35;
+  --color-border-ghost: #222220;
+  --color-surface-ghost: #1A1A18;
+
+  /* Spacing Tokens */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+  --sp-24: 96px;
+  --sp-32: 128px;
+
+  /* Layout Tokens */
+  --gap-grid: 2px;
+  --gap-section: 1px;
+  --pad-section-m: 40px;
+  --pad-section: 72px;
+  --max-width: 1440px;
+  --max-narrow: 900px;
+  --radius: 0px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --dur-fast: 120ms;
+  --dur-base: 220ms;
+  --dur-slow: 380ms;
+
+  /* Base Typography */
+  --font-display: 'Pikabu', 'Syne', sans-serif;
+  --font-heading: 'Pikabu', 'Syne', sans-serif;
+  --font-heading-alt: 'Space Grotesk', sans-serif;
+  --font-body: 'Coolvetica', 'Outfit', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+}
+
+/* 4. Hard Reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* 5. Base Element Styles */
+html {
+  font-size: 14px;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: var(--line-height-base);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img,
+svg,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  border-radius: var(--radius);
+  outline: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* 6. Utility Classes */
+.sw-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+  white-space: nowrap;
+}
+
+/* 6. Button Utilities */
+.sw-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--sp-8);
+  height: 54px;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  border: 1px solid #111111;
+  background-color: #FFFFFF;
+  color: #111111;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+}
+
+.sw-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0px rgba(0,0,0,0.1);
+}
+
+.sw-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+}
+
+.sw-btn--primary {
+  background-color: #111111;
+  color: #FFFFFF;
+  border: none;
+  box-shadow: 4px 4px 0px rgba(0,0,0,0.25);
+}
+
+.sw-btn--primary:hover {
+  box-shadow: 7px 7px 0px rgba(0,0,0,0.25);
+}
+
+.sw-btn--accent {
+  background-color: #388D73;
+  color: #FFFFFF;
+  border-color: #388D73;
+  box-shadow: 4px 4px 0px rgba(56, 141, 115, 0.4);
+}
+
+.sw-btn--accent:hover {
+  box-shadow: 7px 7px 0px rgba(56, 141, 115, 0.4);
+}
+
+.sw-u-mono {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+}
+
+.sw-u-accent {
+  color: #388D73;
+}
+
+.sw-u-muted {
+  color: var(--color-muted);
+}
+
+.sw-reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out);
+}
+
+.sw-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* 7. Layout Utilities */
+.sw-container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--sp-4);
+  padding-right: var(--sp-4);
+}
+
+@media (min-width: 768px) {
+  .sw-container {
+    padding-left: var(--sp-8);
+    padding-right: var(--sp-8);
+  }
+}
+
+/* 8. Scroll Progress Bar */
+@keyframes scrollProgress {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.sw-scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #388D73;
+  transform-origin: 0 50%;
+  z-index: 1000;
+  pointer-events: none;
+  animation: scrollProgress auto linear;
+  animation-timeline: scroll(root block);
+}
+
+/* 9. Focus Styles */
+:focus-visible {
+  outline: 2px solid #5fb8af;
+  outline-offset: 2px;
+}
+
+/* Prefers Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .sw-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* 10. Global Product Card Styles */
+.sw-product-card {
+  background-color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  border: 1px solid #EEEEEE;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.sw-product-card__media {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background-color: #F4F4F4;
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+  cursor: crosshair;
+}
+
+.sw-product-card__img-primary,
+.sw-product-card__img-secondary {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+
+.sw-product-card__img-secondary {
+  opacity: 0;
+}
+
+.sw-product-card:hover .sw-product-card__img-secondary {
+  opacity: 1;
+}
+
+.sw-product-card__badges {
+  position: absolute;
+  top: var(--sp-2);
+  left: var(--sp-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  z-index: 2;
+}
+
+.sw-product-badge {
+  background-color: #FF3366;
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.sw-product-card--soldout .sw-product-card__media {
+  filter: grayscale(60%);
+}
+
+.sw-product-card__soldout-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(13, 13, 13, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+.sw-product-card__soldout-text {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #FFF;
+  background: var(--color-bg);
+  padding: 4px 8px;
+  letter-spacing: 0.1em;
+}
+
+.sw-product-card__quick-add {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  transform: translateY(100%);
+  transition: transform var(--dur-base) var(--ease-out);
+  z-index: 4;
+}
+
+.sw-product-card:hover .sw-product-card__quick-add {
+  transform: translateY(0);
+}
+
+.sw-btn-quick-add {
+  width: 100%;
+  height: 44px;
+  background-color: #FFFFFF;
+  color: #111111;
+  font-family: var(--font-body);
+  font-size: 12px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sw-btn-quick-add:hover {
+  background-color: #F0F0F0;
+}
+
+@media (max-width: 1023px) {
+  .sw-product-card__quick-add {
+    display: none !important;
+  }
+}
+
+.sw-product-card__info {
+  padding: 12px;
+  background-color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sw-product-card__title {
+  font-family: var(--font-body);
+  font-size: clamp(15px, 2vw, 16px);
+  font-weight: bold;
+  color: #000000;
+  text-decoration: none;
+  line-height: 1.2;
+  text-align: left;
+}
+
+.sw-product-card__price {
+  font-family: var(--font-body);
+  font-size: clamp(14px, 2vw, 15px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+}
+
+.sw-price-sale {
+  color: #FF3366;
+  font-weight: 500;
+}
+
+.sw-price-compare {
+  color: #999999;
+  text-decoration: line-through;
+  font-size: 13px;
+}
+
+.sw-price-regular {
+  color: #777777;
+}
+
+.sw-product-card__swatches {
+  display: flex;
+  gap: var(--sp-2);
+  margin-top: var(--sp-2);
+}
+
+.sw-color-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.sw-color-swatch.is-active {
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1), 0 0 0 2px #FFFFFF, 0 0 0 4px #111111;
+}

@@ -1,0 +1,117 @@
+{%- style -%}
+  .sw-account {
+    padding-top: var(--sp-12);
+    padding-bottom: var(--sp-16);
+    background-color: var(--color-bg);
+    min-height: 60vh;
+  }
+  .sw-account__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: var(--sp-8);
+  }
+  .sw-account__title {
+    font-family: var(--font-heading-alt);
+    font-size: 32px;
+    color: var(--color-text);
+    text-transform: uppercase;
+  }
+  .sw-account__logout {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--color-muted);
+    text-decoration: underline;
+  }
+  .sw-account__grid {
+    display: grid;
+    gap: var(--sp-8);
+  }
+  @media (min-width: 1024px) {
+    .sw-account__grid {
+      grid-template-columns: 2fr 1fr;
+    }
+  }
+  .sw-account__section-title {
+    font-family: var(--font-heading-alt);
+    font-size: 18px;
+    color: var(--color-text);
+    text-transform: uppercase;
+    margin-bottom: var(--sp-4);
+  }
+  .sw-account__text {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--color-muted);
+    line-height: 1.6;
+  }
+  table.sw-order-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--color-text);
+  }
+  table.sw-order-table th {
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-muted);
+    text-transform: uppercase;
+    padding-bottom: var(--sp-2);
+    border-bottom: 1px solid var(--color-border);
+  }
+  table.sw-order-table td {
+    padding: var(--sp-4) 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+{%- endstyle -%}
+
+<div class="sw-account sw-reveal">
+  <div class="sw-container">
+    <div class="sw-account__header">
+      <h1 class="sw-account__title">ACCOUNT</h1>
+      <a href="{{ routes.account_logout_url }}" class="sw-account__logout">Log out</a>
+    </div>
+
+    <div class="sw-account__grid">
+      <div>
+        <h2 class="sw-account__section-title">Order History</h2>
+        {% paginate customer.orders by 20 %}
+          {%- if customer.orders.size > 0 -%}
+            <table class="sw-order-table">
+              <thead>
+                <tr>
+                  <th>Order</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {%- for order in customer.orders -%}
+                  <tr>
+                    <td><a href="{{ order.customer_url }}" style="text-decoration:underline;">{{ order.name }}</a></td>
+                    <td>{{ order.created_at | time_tag: format: 'date' }}</td>
+                    <td>{{ order.financial_status_label }}</td>
+                    <td>{{ order.total_price | money }}</td>
+                  </tr>
+                {%- endfor -%}
+              </tbody>
+            </table>
+          {%- else -%}
+            <p class="sw-account__text">You haven't placed any orders yet.</p>
+          {%- endif -%}
+        {% endpaginate %}
+      </div>
+
+      <div>
+        <h2 class="sw-account__section-title">Account Details</h2>
+        <div class="sw-account__text">
+          <p>{{ customer.default_address | format_address }}</p>
+          <a href="{{ routes.account_addresses_url }}" style="text-decoration:underline; color:var(--color-text); margin-top:8px; display:inline-block;">View Addresses ({{ customer.addresses_count }})</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,686 @@
+{%- style -%}
+  /* Layout */
+  .sw-product-section {
+    padding-bottom: var(--pad-section-m);
+    background-color: #FFFFFF;
+  }
+  @media (min-width: 1024px) {
+    .sw-product-section {
+      padding-top: var(--sp-8);
+      padding-bottom: var(--pad-section);
+    }
+  }
+  .sw-container--product {
+    padding: 0;
+  }
+  @media (min-width: 1024px) {
+    .sw-container--product {
+      padding: 0 var(--sp-6);
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+  }
+  
+  .sw-product-layout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-8);
+  }
+  @media (min-width: 1024px) {
+    .sw-product-layout {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: var(--sp-12);
+    }
+    .sw-product-gallery { width: 55%; }
+    .sw-product-info { 
+      width: 45%; 
+      position: sticky;
+      top: 100px;
+      padding-right: var(--sp-6);
+    }
+  }
+
+  /* Gallery */
+  .sw-product-main-media {
+    position: relative;
+    width: 100%;
+    background-color: #F0F0F0;
+    aspect-ratio: 4/5;
+    overflow: hidden;
+  }
+  .sw-product-main-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .sw-expand-btn {
+    position: absolute;
+    top: var(--sp-4);
+    right: var(--sp-4);
+    width: 32px;
+    height: 32px;
+    background: #FFFFFF;
+    color: #111111;
+    border: 1px solid #E0E0E0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    z-index: 10;
+  }
+  .sw-expand-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .sw-product-thumbnails {
+    display: flex;
+    gap: var(--sp-2);
+    padding: var(--sp-4);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .sw-product-thumbnails::-webkit-scrollbar { display: none; }
+  @media (min-width: 1024px) {
+    .sw-product-thumbnails { padding: var(--sp-4) 0; }
+  }
+  .sw-thumbnail {
+    flex-shrink: 0;
+    width: 60px;
+    height: 80px;
+    background-color: #F0F0F0;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color var(--dur-fast);
+  }
+  .sw-thumbnail.is-active {
+    border-color: #111111;
+  }
+  .sw-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Info Column */
+  .sw-product-info {
+    padding: 0 var(--sp-4);
+  }
+  @media (min-width: 1024px) {
+    .sw-product-info { padding: 0; }
+  }
+
+  .sw-product-title {
+    font-family: var(--font-heading-alt);
+    font-size: clamp(28px, 4vw, 36px);
+    color: #111111;
+    line-height: 1.1;
+    margin-bottom: var(--sp-2);
+    letter-spacing: 0em;
+  }
+  
+  .sw-product-price-block {
+    margin-bottom: var(--sp-6);
+  }
+  .sw-product-price {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    color: #777777;
+  }
+  
+  /* Variant Swatches */
+  .sw-variant-group {
+    border: none;
+    margin-bottom: var(--sp-6);
+  }
+  .sw-variant-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: var(--sp-3);
+    font-family: var(--font-body);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #777777;
+  }
+  .sw-variant-value {
+    color: #111111;
+  }
+  .sw-size-chart-link {
+    font-family: var(--font-body);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #777777;
+    text-decoration: underline;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  /* Color Circles */
+  .sw-color-swatches {
+    display: flex;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+  }
+  .sw-color-swatch {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
+  }
+  input[type="radio"]:checked + .sw-color-swatch {
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1), 0 0 0 2px #FFFFFF, 0 0 0 4px #111111;
+  }
+  input[type="radio"]:disabled + .sw-color-swatch {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  /* Size Pills */
+  .sw-size-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+  .sw-size-pill {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 48px;
+    height: 40px;
+    padding: 0 var(--sp-3);
+    border: 1px solid #E0E0E0;
+    background-color: #F8F8F8;
+    color: #111111;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all var(--dur-fast);
+  }
+  input[type="radio"]:checked + .sw-size-pill {
+    border-color: #111111;
+    border-width: 2px;
+    background-color: #FFFFFF;
+  }
+  input[type="radio"]:disabled + .sw-size-pill {
+    opacity: 0.3;
+    text-decoration: line-through;
+    cursor: not-allowed;
+  }
+  
+  .sw-stock-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: #777777;
+    margin-bottom: var(--sp-6);
+  }
+  .sw-stock-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #88B04B; /* Green */
+    display: inline-block;
+  }
+
+  /* Add to Cart Group */
+  .sw-atc-group {
+    display: flex;
+    gap: var(--sp-3);
+    margin-bottom: var(--sp-3);
+  }
+  .sw-qty-selector {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 110px;
+    height: 56px;
+    border: 1px solid #E0E0E0;
+    background-color: #F8F8F8;
+    border-radius: 28px;
+    padding: 0 var(--sp-2);
+  }
+  .sw-qty-btn {
+    width: 32px;
+    height: 32px;
+    background: none;
+    border: none;
+    color: #111111;
+    font-family: var(--font-mono);
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .sw-qty-input {
+    width: 30px;
+    text-align: center;
+    border: none;
+    color: #111111;
+    background: transparent;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    -moz-appearance: textfield;
+  }
+  .sw-qty-input::-webkit-outer-spin-button, 
+  .sw-qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .sw-btn-add {
+    flex: 1;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .sw-btn-add:hover { opacity: 0.9; }
+  .sw-btn-buy-now {
+    width: 100%;
+    margin-bottom: var(--sp-8);
+  }
+  
+  /* Accordions */
+  .sw-accordion-group {
+    border-top: 1px solid #E0E0E0;
+  }
+  .sw-accordion-item {
+    border-bottom: 1px solid #E0E0E0;
+  }
+  .sw-accordion-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--sp-4) 0;
+    background: none;
+    border: none;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: #111111;
+    cursor: pointer;
+    text-align: left;
+  }
+  .sw-accordion-header-inner {
+    display: flex;
+    align-items: center;
+    color: #111111;
+    gap: var(--sp-3);
+  }
+  .sw-accordion-header-inner svg {
+    width: 20px;
+    height: 20px;
+    opacity: 0.6;
+  }
+  .sw-accordion-icon {
+    font-size: 20px;
+    font-weight: 300;
+    color: #777777;
+    transition: transform var(--dur-fast);
+  }
+  .sw-accordion-item[open] .sw-accordion-icon {
+    transform: rotate(45deg);
+  }
+  .sw-accordion-content {
+    padding-bottom: var(--sp-4);
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: #444444;
+    line-height: 1.6;
+    display: none;
+  }
+  .sw-accordion-item.is-open .sw-accordion-content {
+    display: block;
+  }
+{%- endstyle -%}
+
+<section class="sw-product-section sw-reveal" data-section-id="{{ section.id }}">
+  <div class="sw-container sw-container--product">
+    <div class="sw-product-layout">
+      
+      <!-- Gallery Column -->
+      <div class="sw-product-gallery">
+        <div class="sw-product-main-media">
+          <img src="{{ product.featured_media | image_url: width: 1200 }}" alt="{{ product.title | escape }}" class="sw-product-main-img" id="sw-main-img">
+          <button class="sw-expand-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+          </button>
+        </div>
+        
+        {%- if product.media.size > 1 -%}
+          <div class="sw-product-thumbnails">
+            {%- for media in product.media -%}
+              <div class="sw-thumbnail {% if forloop.first %}is-active{% endif %}" data-src="{{ media | image_url: width: 1200 }}">
+                <img src="{{ media | image_url: width: 150 }}" alt="{{ media.alt | escape }}">
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      <!-- Info Column -->
+      <div class="sw-product-info">
+        <h1 class="sw-product-title">{{ product.title }}</h1>
+        <div class="sw-product-price-block">
+          <span class="sw-product-price" id="sw-price-{{ section.id }}">
+            {{ product.selected_or_first_available_variant.price | money }}
+          </span>
+        </div>
+
+        <sw-variant-radios data-section="{{ section.id }}" data-url="{{ product.url }}">
+          {%- unless product.has_only_default_variant -%}
+            {%- for option in product.options_with_values -%}
+              <fieldset class="sw-variant-group">
+                <div class="sw-variant-header">
+                  {%- assign opt_name = option.name | downcase -%}
+                  <div>{{ option.name }}: <span class="sw-variant-value" id="sw-val-{{ section.id }}-{{ option.position }}">{{ option.selected_value }}</span></div>
+                  
+                  {%- if opt_name contains 'size' -%}
+                    <div class="sw-size-chart-link">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0v12H4V6h16zm-4 3c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1zm-4 0c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1zm-4 0c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1z"/></svg>
+                      Size chart
+                    </div>
+                  {%- endif -%}
+                </div>
+                
+                <div class="{% if opt_name contains 'color' or opt_name contains 'colour' %}sw-color-swatches{% else %}sw-size-pills{% endif %}">
+                  {%- for value in option.values -%}
+                    <input type="radio" 
+                           class="sw-sr-only" 
+                           id="sw-{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                           name="{{ option.name }}"
+                           value="{{ value | escape }}"
+                           form="product-form-{{ section.id }}"
+                           {% if option.selected_value == value %}checked{% endif %}>
+                    
+                    {%- if opt_name contains 'color' or opt_name contains 'colour' -%}
+                      <label for="sw-{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" 
+                             class="sw-color-swatch"
+                             style="background-color: {{ value | downcase | replace: ' ', '' }};"
+                             title="{{ value | escape }}">
+                        <span class="sw-sr-only">{{ value }}</span>
+                      </label>
+                    {%- else -%}
+                      <label for="sw-{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" 
+                             class="sw-size-pill">
+                        {{ value }}
+                      </label>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </div>
+              </fieldset>
+            {%- endfor -%}
+          {%- endunless -%}
+          <script type="application/json" id="sw-variants-json-{{ section.id }}">
+            {{ product.variants | json }}
+          </script>
+        </sw-variant-radios>
+
+        <div class="sw-stock-indicator">
+          <span class="sw-stock-dot"></span> In stock, ready to ship
+        </div>
+
+        <form method="post" action="/cart/add" id="product-form-{{ section.id }}" accept-charset="UTF-8" class="sw-product-form" enctype="multipart/form-data">
+          <input type="hidden" name="form_type" value="product">
+          <input type="hidden" name="utf8" value="✓">
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" id="sw-master-id-{{ section.id }}">
+          
+          <div class="sw-atc-group">
+            <div class="sw-qty-selector">
+              <button type="button" class="sw-qty-btn" id="sw-qty-minus">-</button>
+              <input type="number" name="quantity" value="1" min="1" class="sw-qty-input" id="sw-qty-input">
+              <button type="button" class="sw-qty-btn" id="sw-qty-plus">+</button>
+            </div>
+            
+            <button type="submit" 
+                    name="add" 
+                    class="sw-btn sw-btn--primary sw-btn-add {% unless product.selected_or_first_available_variant.available %}is-sold-out{% endunless %}" 
+                    id="sw-add-{{ section.id }}"
+                    {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
+              <span>
+                {%- if product.selected_or_first_available_variant.available -%}
+                  Add to cart
+                {%- else -%}
+                  Sold out
+                {%- endif -%}
+              </span>
+            </button>
+          </div>
+
+          <button type="button" class="sw-btn sw-btn-buy-now">Buy it now</button>
+        </form>
+
+        <div class="sw-accordion-group">
+          {%- if product.description != blank -%}
+            <div class="sw-accordion-item">
+              <button class="sw-accordion-header">
+                <div class="sw-accordion-header-inner">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16h16V8l-6-6z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
+                  Description
+                </div>
+                <span class="sw-accordion-icon">+</span>
+              </button>
+              <div class="sw-accordion-content">
+                {{ product.description }}
+              </div>
+            </div>
+          {%- endif -%}
+
+          <div class="sw-accordion-item">
+            <button class="sw-accordion-header">
+              <div class="sw-accordion-header-inner">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0v12H4V6h16zm-4 3c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1zm-4 0c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1zm-4 0c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1z"/></svg>
+                Size Chart
+              </div>
+              <span class="sw-accordion-icon">+</span>
+            </button>
+            <div class="sw-accordion-content">
+              Refer to our detailed sizing chart to ensure the perfect fit for your new item.
+            </div>
+          </div>
+
+          <div class="sw-accordion-item">
+            <button class="sw-accordion-header">
+              <div class="sw-accordion-header-inner">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="6.5"/></svg>
+                Care Guide
+              </div>
+              <span class="sw-accordion-icon">+</span>
+            </button>
+            <div class="sw-accordion-content">
+              Machine wash cold with like colors. Do not bleach. Tumble dry low or hang dry. Do not iron graphic.
+            </div>
+          </div>
+
+          <div class="sw-accordion-item">
+            <button class="sw-accordion-header">
+              <div class="sw-accordion-header-inner">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Why Buy from us?
+              </div>
+              <span class="sw-accordion-icon">+</span>
+            </button>
+            <div class="sw-accordion-content">
+              Premium materials, exclusive drops, and lightning-fast customer service.
+            </div>
+          </div>
+
+          <div class="sw-accordion-item">
+            <button class="sw-accordion-header">
+              <div class="sw-accordion-header-inner">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Need help?
+              </div>
+              <span class="sw-accordion-icon">+</span>
+            </button>
+            <div class="sw-accordion-content">
+              Contact our support team anytime. We usually respond within 24 hours.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  /* Gallery Logic */
+  document.addEventListener('DOMContentLoaded', () => {
+    const mainImg = document.getElementById('sw-main-img');
+    const thumbnails = document.querySelectorAll('.sw-thumbnail');
+    
+    thumbnails.forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        thumbnails.forEach(t => t.classList.remove('is-active'));
+        thumb.classList.add('is-active');
+        if (mainImg) mainImg.src = thumb.dataset.src;
+      });
+    });
+
+    /* Qty Logic */
+    const qtyInput = document.getElementById('sw-qty-input');
+    const qtyMinus = document.getElementById('sw-qty-minus');
+    const qtyPlus = document.getElementById('sw-qty-plus');
+    if(qtyInput && qtyMinus && qtyPlus) {
+      qtyMinus.addEventListener('click', () => {
+        let val = parseInt(qtyInput.value) || 1;
+        if(val > 1) qtyInput.value = val - 1;
+      });
+      qtyPlus.addEventListener('click', () => {
+        let val = parseInt(qtyInput.value) || 1;
+        qtyInput.value = val + 1;
+      });
+    }
+
+    /* Accordions */
+    const accordions = document.querySelectorAll('.sw-accordion-header');
+    accordions.forEach(acc => {
+      acc.addEventListener('click', () => {
+        const item = acc.closest('.sw-accordion-item');
+        item.classList.toggle('is-open');
+        const icon = acc.querySelector('.sw-accordion-icon');
+        icon.textContent = item.classList.contains('is-open') ? '−' : '+';
+      });
+    });
+
+    /* Form Ajax */
+    const form = document.getElementById('product-form-{{ section.id }}');
+    if (form) {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const btn = form.querySelector('.sw-btn-add');
+        const span = btn.querySelector('span');
+        const originalText = span.textContent;
+        const formData = new FormData(form);
+
+        span.textContent = 'Adding...';
+        
+        fetch(window.Shopify.routes.root + 'cart/add.js', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(response => {
+          span.textContent = 'Added ✓';
+          setTimeout(() => { span.textContent = originalText; }, 1400);
+          document.dispatchEvent(new CustomEvent('cart:updated'));
+        })
+        .catch(error => {
+          console.error(error);
+          span.textContent = 'Error';
+          setTimeout(() => { span.textContent = originalText; }, 1400);
+        });
+      });
+    }
+  });
+
+  /* Variant Radios */
+  class SwVariantRadios extends HTMLElement {
+    constructor() {
+      super();
+      this.addEventListener('change', this.onVariantChange);
+      const jsonScript = this.querySelector('[type="application/json"]');
+      if(jsonScript) {
+        this.variantData = JSON.parse(jsonScript.textContent);
+      }
+    }
+
+    onVariantChange() {
+      this.updateOptions();
+      this.updateMasterId();
+      this.toggleAddButton(true, '', false);
+      this.updateDOM();
+      
+      if (!this.currentVariant) {
+        this.toggleAddButton(true, 'Unavailable', true);
+      } else {
+        this.updateURL();
+        if (!this.currentVariant.available) {
+          this.toggleAddButton(true, 'Sold Out', false);
+        } else {
+          this.toggleAddButton(false, 'Add to cart', false);
+        }
+      }
+    }
+
+    updateOptions() {
+      const fieldsets = Array.from(this.querySelectorAll('fieldset'));
+      this.options = fieldsets.map(fieldset => {
+        return Array.from(fieldset.querySelectorAll('input')).find(radio => radio.checked)?.value;
+      });
+      // update text labels
+      fieldsets.forEach((fieldset, index) => {
+        const valSpan = document.getElementById(`sw-val-${this.dataset.section}-${index + 1}`);
+        if(valSpan && this.options[index]) valSpan.innerHTML = this.options[index];
+      });
+    }
+
+    updateMasterId() {
+      if(!this.variantData) return;
+      this.currentVariant = this.variantData.find(variant => {
+        return !variant.options.map((option, index) => {
+          return this.options[index] === option;
+        }).includes(false);
+      });
+      
+      const masterInput = document.getElementById(`sw-master-id-${this.dataset.section}`);
+      if(masterInput && this.currentVariant) {
+        masterInput.value = this.currentVariant.id;
+      }
+    }
+
+    updateDOM() {
+      if(!this.currentVariant) return;
+      const priceContainer = document.getElementById(`sw-price-${this.dataset.section}`);
+      if(priceContainer) {
+        priceContainer.innerHTML = window.Shopify.formatMoney ? window.Shopify.formatMoney(this.currentVariant.price) : `PKR ${(this.currentVariant.price/100).toLocaleString()}`;
+      }
+    }
+
+    updateURL() {
+      if (!this.currentVariant) return;
+      window.history.replaceState({ }, '', `${this.dataset.url}?variant=${this.currentVariant.id}`);
+    }
+
+    toggleAddButton(disable, text, modifyClass) {
+      const button = document.getElementById(`sw-add-${this.dataset.section}`);
+      if(!button) return;
+      if(disable) {
+        button.setAttribute('disabled', 'disabled');
+        if(text) button.querySelector('span').textContent = text;
+      } else {
+        button.removeAttribute('disabled');
+        button.querySelector('span').textContent = text;
+      }
+    }
+  }
+  customElements.define('sw-variant-radios', SwVariantRadios);
+</script>

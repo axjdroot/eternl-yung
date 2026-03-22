@@ -1,0 +1,251 @@
+{%- style -%}
+  .sw-product-grid-section {
+    padding-top: var(--pad-section-m);
+    padding-bottom: var(--pad-section-m);
+    background-color: var(--color-bg);
+  }
+  @media (min-width: 1024px) {
+    .sw-product-grid-section {
+      padding-top: var(--pad-section);
+      padding-bottom: var(--pad-section);
+    }
+  }
+  .sw-product-grid__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: var(--sp-6);
+  }
+  .sw-product-grid__heading {
+    font-family: var(--font-heading-alt);
+    font-size: 28px;
+    text-transform: uppercase;
+    color: var(--color-text);
+    margin-bottom: var(--sp-4);
+  }
+  .sw-product-grid__tabs {
+    display: flex;
+    gap: var(--sp-6);
+    overflow-x: auto;
+    width: 100%;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .sw-product-grid__tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .sw-product-grid__tab {
+    font-family: var(--font-body);
+    font-size: 12px;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    padding-bottom: var(--sp-1);
+    border-bottom: 2px solid transparent;
+    transition: color var(--dur-fast), border-color var(--dur-fast);
+  }
+  .sw-product-grid__tab.is-active {
+    color: var(--color-text);
+    border-color: var(--color-text);
+  }
+  .sw-product-grid__tab:hover {
+    color: var(--color-text);
+  }
+  .sw-product-grid__panel {
+    display: none;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 16px;
+    animation: sw-fade-in var(--dur-base) var(--ease-out);
+  }
+  .sw-product-grid__panel.is-active {
+    display: grid;
+  }
+  @keyframes sw-fade-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @media (min-width: 768px) {
+    .sw-product-grid__panel {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+  }
+  @media (min-width: 1024px) {
+    .sw-product-grid__panel {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+    }
+  }
+
+
+{%- endstyle -%}
+
+<section class="sw-product-grid-section sw-reveal" id="sw-product-grid-{{ section.id }}">
+  <div class="sw-container">
+    {%- if section.settings.show_heading and section.settings.heading != blank -%}
+      <div class="sw-product-grid__header">
+        <h2 class="sw-product-grid__heading">{{ section.settings.heading }}</h2>
+        
+        {%- if section.blocks.size > 0 -%}
+          <div class="sw-product-grid__tabs" role="tablist">
+            {%- for block in section.blocks -%}
+              {%- assign tab_title = block.settings.tab_title | default: block.settings.collection.title -%}
+              <button class="sw-product-grid__tab {% if forloop.first %}is-active{% endif %}"
+                      role="tab"
+                      aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                      aria-controls="panel-{{ section.id }}-{{ forloop.index }}"
+                      data-target="panel-{{ section.id }}-{{ forloop.index }}">
+                {{ tab_title }}
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="sw-product-grid__content">
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          <div class="sw-product-grid__panel {% if forloop.first %}is-active{% endif %}"
+               id="panel-{{ section.id }}-{{ forloop.index }}"
+               role="tabpanel">
+            {%- for product in block.settings.collection.products limit: section.settings.products_to_show -%}
+              {% render 'product-card', product: product, lazy_load: forloop.index > 4 %}
+            {%- else -%}
+              {%- for i in (1..4) -%}
+                <div class="sw-product-card">
+                  <div class="sw-product-card__media">
+                    {{ 'product-' | append: i | placeholder_svg_tag: 'sw-product-card__placeholder' }}
+                  </div>
+                  <div class="sw-product-card__info">
+                    <span class="sw-product-card__title">Example Product</span>
+                    <span class="sw-product-card__price"><span class="sw-price-regular">PKR 5,000</span></span>
+                  </div>
+                </div>
+              {%- endfor -%}
+            {%- endfor -%}
+          </div>
+        {%- endfor -%}
+      {%- else -%}
+        <div class="sw-product-grid__panel is-active">
+          {%- assign col_setting = section.settings.collection -%}
+          {%- if col_setting.handle != blank -%}
+            {%- assign main_collection = col_setting -%}
+          {%- else -%}
+            {%- assign main_collection = collections[col_setting] -%}
+          {%- endif -%}
+          {%- for product in main_collection.products limit: section.settings.products_to_show -%}
+             {% render 'product-card', product: product, lazy_load: forloop.index > 4 %}
+          {%- else -%}
+             <p class="sw-u-muted">Assign a collection to see products.</p>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<script>
+  /* [PHASE 3] 2026-03-08 — Product grid tab switcher */
+  document.addEventListener('DOMContentLoaded', () => {
+    const section = document.getElementById('sw-product-grid-{{ section.id }}');
+    if (!section) return;
+
+    const tabs = section.querySelectorAll('.sw-product-grid__tab');
+    const panels = section.querySelectorAll('.sw-product-grid__panel');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => {
+          t.classList.remove('is-active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        panels.forEach(p => p.classList.remove('is-active'));
+
+        tab.classList.add('is-active');
+        tab.setAttribute('aria-selected', 'true');
+        
+        const targetId = tab.getAttribute('data-target');
+        const targetPanel = document.getElementById(targetId);
+        if (targetPanel) {
+          targetPanel.classList.add('is-active');
+        }
+      });
+    });
+
+    /* Quick Add logic is handled by the product-card snippet's own delegated listeners */
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Product Grid",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_heading",
+      "label": "Show heading",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "LATEST DROPS"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Fallback Collection",
+      "info": "Used if no blocks are added."
+    },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "Products per row (Desktop)",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "4", "label": "4" }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 4,
+      "max": 24,
+      "step": 4,
+      "label": "Products to show per tab",
+      "default": 8
+    }
+  ],
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Sub-Collection Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "tab_title",
+          "label": "Tab Title",
+          "info": "Leave blank to use collection title"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Grid",
+      "blocks": [
+        { "type": "tab", "settings": { "tab_title": "ALL", "collection": "latest" } },
+        { "type": "tab", "settings": { "tab_title": "OVERSIZED" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

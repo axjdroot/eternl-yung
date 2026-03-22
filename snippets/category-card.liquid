@@ -1,0 +1,29 @@
+{% doc %}
+  Renders a single category card tile.
+  
+  @param {object} block - The schema block object containing settings
+{% enddoc %}
+
+<a href="{{ block.settings.collection.url | default: '#' }}" class="sw-category-card" style="cursor: crosshair;">
+  <div class="sw-category-card__media sw-category-card__media--{{ block.settings.aspect_ratio }}">
+    {%- if block.settings.image != blank -%}
+      <img src="{{ block.settings.image | image_url: width: 800 }}"
+           alt="{{ block.settings.label | escape }}"
+           loading="lazy"
+           decoding="async"
+           class="sw-category-card__img">
+    {%- else -%}
+      {{ 'collection-1' | placeholder_svg_tag: 'sw-category-card__placeholder' }}
+    {%- endif -%}
+    <div class="sw-category-card__overlay"></div>
+  </div>
+  
+  <div class="sw-category-card__info">
+    <h3 class="sw-category-card__title">
+      {{ block.settings.label | default: block.settings.collection.title | default: 'Collection' }}
+    </h3>
+    <span class="sw-category-card__count">
+      {{ block.settings.count_label | default: '0 styles' }}
+    </span>
+  </div>
+</a>

@@ -1,0 +1,196 @@
+{% doc %}
+  Product media gallery snippet. Left side of 50/50 desktop split.
+  
+  @param {object} product - The product object
+{% enddoc %}
+
+{%- style -%}
+  .sw-product-media {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+  }
+  .sw-product-media__main {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    background-color: var(--color-bg-chalk);
+    overflow: hidden;
+  }
+  .sw-product-media__img-main {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--dur-base) var(--ease-out);
+    cursor: zoom-in;
+  }
+  /* Native browser zoom effect */
+  .sw-product-media__main.is-zoomed .sw-product-media__img-main {
+    transform: scale(2);
+    cursor: zoom-out;
+  }
+  .sw-product-media__thumbs {
+    display: flex;
+    gap: 2px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+  }
+  .sw-product-media__thumbs::-webkit-scrollbar {
+    height: 4px;
+  }
+  .sw-product-media__thumbs::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .sw-product-media__thumbs::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+  }
+  .sw-product-media__thumb-btn {
+    width: 72px;
+    height: 96px;
+    flex-shrink: 0;
+    position: relative;
+    background-color: var(--color-bg-chalk);
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: opacity var(--dur-fast), border-color var(--dur-fast);
+  }
+  .sw-product-media__thumb-btn.is-active {
+    border-color: var(--color-text);
+  }
+  .sw-product-media__thumb-btn:hover {
+    opacity: 0.7;
+  }
+  .sw-product-media__thumb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (max-width: 1023px) {
+    .sw-product-media {
+      gap: 0;
+    }
+    .sw-product-media__main {
+      display: flex;
+      scroll-snap-type: x mandatory;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .sw-product-media__main::-webkit-scrollbar {
+      display: none;
+    }
+    .sw-product-media__img-main {
+      scroll-snap-align: start;
+      flex-shrink: 0;
+    }
+    .sw-product-media__thumbs {
+      display: none;
+    }
+  }
+{%- endstyle -%}
+
+<div class="sw-product-media">
+  {%- if product.media.size > 0 -%}
+    <div class="sw-product-media__main" id="sw-product-main-media">
+      {%- for media in product.media -%}
+        <img src="{{ media | image_url: width: 1400 }}"
+             alt="{{ media.alt | escape }}"
+             class="sw-product-media__img-main"
+             data-media-id="{{ media.id }}"
+             {% if forloop.first %}style="display: block;"{% else %}style="display: none;"{% endif %}
+             loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+             decoding="async">
+      {%- endfor -%}
+    </div>
+    
+    <div class="sw-product-media__thumbs" role="tablist">
+      {%- for media in product.media -%}
+        <button type="button" 
+                class="sw-product-media__thumb-btn {% if forloop.first %}is-active{% endif %}"
+                data-target-id="{{ media.id }}"
+                role="tab"
+                aria-label="View media {{ forloop.index }}">
+          <img src="{{ media | image_url: width: 144 }}"
+               alt="{{ media.alt | escape }}"
+               class="sw-product-media__thumb-img"
+               loading="lazy"
+               decoding="async">
+        </button>
+      {%- endfor -%}
+    </div>
+  {%- else -%}
+    <div class="sw-product-media__main">
+      {{ 'product-1' | placeholder_svg_tag: 'sw-product-media__img-main' }}
+    </div>
+  {%- endif -%}
+</div>
+
+<script>
+  /* [PHASE 4] 2026-03-08 — Media gallery logic */
+  document.addEventListener('DOMContentLoaded', () => {
+    const mainMediaContainer = document.getElementById('sw-product-main-media');
+    if (!mainMediaContainer) return;
+
+    const mainImages = mainMediaContainer.querySelectorAll('.sw-product-media__img-main');
+    const thumbs = document.querySelectorAll('.sw-product-media__thumb-btn');
+
+    // Desktop: switch main image on thumb click
+    thumbs.forEach((thumb, index) => {
+      thumb.addEventListener('click', () => {
+        const targetId = thumb.getAttribute('data-target-id');
+        
+        mainImages.forEach(img => {
+          if (img.getAttribute('data-media-id') === targetId) {
+            img.style.display = 'block';
+          } else {
+            img.style.display = 'none';
+          }
+        });
+
+        thumbs.forEach(t => t.classList.remove('is-active'));
+        thumb.classList.add('is-active');
+      });
+    });
+
+    // Desktop: Keyboard navigation
+    mainMediaContainer.setAttribute('tabindex', '0');
+    mainMediaContainer.addEventListener('keydown', (e) => {
+      if (window.innerWidth < 1024) return;
+      
+      let activeIndex = Array.from(thumbs).findIndex(t => t.classList.contains('is-active'));
+      if (e.key === 'ArrowRight') {
+        activeIndex = (activeIndex + 1) % thumbs.length;
+        thumbs[activeIndex].click();
+      } else if (e.key === 'ArrowLeft') {
+        activeIndex = (activeIndex - 1 + thumbs.length) % thumbs.length;
+        thumbs[activeIndex].click();
+      }
+    });
+
+    // Desktop: Native browser zoom emulation (no lightbox)
+    mainMediaContainer.addEventListener('click', (e) => {
+      if (window.innerWidth < 1024) return;
+      if (e.target.tagName === 'IMG') {
+        mainMediaContainer.classList.toggle('is-zoomed');
+      }
+    });
+
+    mainMediaContainer.addEventListener('mousemove', (e) => {
+      if (!mainMediaContainer.classList.contains('is-zoomed')) return;
+      const { left, top, width, height } = mainMediaContainer.getBoundingClientRect();
+      const x = (e.clientX - left) / width * 100;
+      const y = (e.clientY - top) / height * 100;
+      
+      const activeImg = Array.from(mainImages).find(img => img.style.display === 'block');
+      if (activeImg) {
+        activeImg.style.transformOrigin = `${x}% ${y}%`;
+      }
+    });
+
+    mainMediaContainer.addEventListener('mouseleave', () => {
+      mainMediaContainer.classList.remove('is-zoomed');
+    });
+  });
+</script>

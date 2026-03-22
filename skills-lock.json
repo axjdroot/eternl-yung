@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "skills": {
+    "shopify": {
+      "source": "mrgoonie/claudekit-skills",
+      "sourceType": "github",
+      "computedHash": "7505eb441d16c435c352904c49086a2928703aebfe1e3e2d1cd5c908022b973a"
+    },
+    "shopify-expert": {
+      "source": "jeffallan/claude-skills",
+      "sourceType": "github",
+      "computedHash": "7c13cf1c0ecb6bbd9d6f79f3398b3903ca66977868566a10c862919dbe6ce967"
+    },
+    "shopify-liquid-themes": {
+      "source": "benjaminsehl/liquid-skills",
+      "sourceType": "github",
+      "computedHash": "4c4afe344d3e9b2b7da15a50aa9cb1863de01054e7e61f94119f3b4367bee67d"
+    },
+    "shopify-polaris-web-components": {
+      "source": "tamiror6/shopify-app-skills",
+      "sourceType": "github",
+      "computedHash": "cd00df6624811648aa2c7202db5d8c84f5b546632de7a1a9fd80988801634dc5"
+    },
+    "shopify-theme-development-guidelines": {
+      "source": "mindrally/skills",
+      "sourceType": "github",
+      "computedHash": "c5f9fa0210e1af6899a60afc9675a0465f419f8b6de6dae13e855e644f3ed717"
+    }
+  }
+}

@@ -1,0 +1,294 @@
+{% doc %}
+  Renders a product card for grids.
+  Aesthetic: Modern Y2K / Eternl Yung (Frosted glass, metallic accents, floating elements).
+  
+  @param {object} product - The product object
+  @param {boolean} [lazy_load=true] - Whether to lazy load the main image
+{% enddoc %}
+
+<style>
+  .sw-product-card-y2k {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  /* Image Container */
+  .sw-product-card-y2k__media {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    border-radius: 24px;
+    overflow: hidden;
+    background-color: #F8F8F8;
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .sw-product-card-y2k__img-primary,
+  .sw-product-card-y2k__img-secondary {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s var(--ease-out), opacity 0.4s ease;
+  }
+
+  .sw-product-card-y2k__img-secondary {
+    opacity: 0;
+  }
+
+  .sw-product-card-y2k:hover .sw-product-card-y2k__img-primary {
+    transform: scale(1.08);
+  }
+
+  .sw-product-card-y2k:hover .sw-product-card-y2k__img-secondary {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+
+  /* Floating Info Pill (Frosted Glass) */
+  .sw-product-card-y2k__info-overlay {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 16px;
+    padding: 10px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 5;
+    transition: all 0.3s var(--ease-out);
+  }
+
+  .sw-product-card-y2k:hover .sw-product-card-y2k__info-overlay {
+    background: rgba(13, 13, 13, 0.8);
+    border-color: #388D73;
+    transform: translateY(-4px);
+  }
+
+  .sw-product-card-y2k__title {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #111111;
+    transition: color 0.3s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 65%;
+  }
+
+  .sw-product-card-y2k__price {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    color: #111111;
+    transition: color 0.3s ease;
+  }
+
+  .sw-product-card-y2k:hover .sw-product-card-y2k__title,
+  .sw-product-card-y2k:hover .sw-product-card-y2k__price {
+    color: #388D73;
+  }
+
+  /* Badges */
+  .sw-product-card-y2k__badges {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 6;
+    display: flex;
+    gap: 6px;
+  }
+
+  .sw-y2k-badge {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .sw-y2k-badge--new {
+    background: #0D0D0D;
+    color: #FFFFFF;
+  }
+
+  .sw-y2k-badge--sale {
+    background: #388D73;
+    color: #FFFFFF;
+  }
+
+  .sw-y2k-badge--limited {
+    background: #FFFFFF;
+    color: #0D0D0D;
+    border: 1px solid #0D0D0D;
+  }
+
+  /* Quick Add Button (Y2K Tech Style) */
+  .sw-product-card-y2k__atc {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 36px;
+    height: 36px;
+    background: #FFFFFF;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 6;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    box-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+  }
+
+  .sw-product-card-y2k:hover .sw-product-card-y2k__atc {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .sw-product-card-y2k__atc:hover {
+    background: #388D73;
+    color: #FFFFFF;
+    border-color: #388D73;
+    transform: scale(1.1) translate(-2px, -2px);
+    box-shadow: 4px 4px 0px rgba(56, 141, 115, 0.4);
+  }
+
+  .sw-product-card-y2k__atc svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Sold Out state */
+  .sw-product-card-y2k--soldout .sw-product-card-y2k__media {
+    filter: grayscale(1);
+    opacity: 0.6;
+  }
+</style>
+
+{%- liquid
+  assign is_sold_out = false
+  if product.available == false
+    assign is_sold_out = true
+  endif
+
+  assign is_on_sale = false
+  if product.compare_at_price > product.price
+    assign is_on_sale = true
+  endif
+-%}
+
+<div class="sw-product-card-wrap-new">
+  <div class="sw-product-card-y2k {% if is_sold_out %}sw-product-card-y2k--soldout{% endif %}" data-product-handle="{{ product.handle }}">
+    
+    <div class="sw-product-card-y2k__media">
+      <a href="{{ product.url }}" class="sw-product-card__link-absolute" style="position:absolute; inset:0; z-index:3;"></a>
+      
+      {%- if product.featured_media -%}
+        <img
+          src="{{ product.featured_media | image_url: width: 800 }}"
+          alt="{{ product.featured_media.alt | escape }}"
+          loading="{% if lazy_load == false %}eager{% else %}lazy{% endif %}"
+          class="sw-product-card-y2k__img-primary"
+          width="800"
+          height="1067">
+
+        {%- if product.media[1] != blank -%}
+          <img
+            src="{{ product.media[1] | image_url: width: 800 }}"
+            alt="{{ product.media[1].alt | escape }}"
+            loading="lazy"
+            class="sw-product-card-y2k__img-secondary"
+            width="800"
+            height="1067">
+        {%- endif -%}
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'sw-product-card-y2k__img-primary' }}
+      {%- endif -%}
+
+      <!-- Frosted Info Overlay -->
+      <div class="sw-product-card-y2k__info-overlay">
+        <span class="sw-product-card-y2k__title">{{ product.title }}</span>
+        <span class="sw-product-card-y2k__price">
+          {%- if is_sold_out -%}
+            SOLD OUT
+          {%- else -%}
+            {{ product.price | money_without_trailing_zeros }}
+          {%- endif -%}
+        </span>
+      </div>
+
+      <!-- Quick Add (Tech Circle) -->
+      {%- unless is_sold_out -%}
+        <button type="button" 
+                class="sw-product-card-y2k__atc sw-js-add-to-cart" 
+                data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+                aria-label="Quick Add">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      {%- endunless -%}
+    </div>
+
+    <!-- Badges -->
+    <div class="sw-product-card-y2k__badges">
+      {%- if product.tags contains 'new' -%}
+        <span class="sw-y2k-badge sw-y2k-badge--new">NEW</span>
+      {%- endif -%}
+      {%- if is_on_sale -%}
+        <span class="sw-y2k-badge sw-y2k-badge--sale">SALE</span>
+      {%- endif -%}
+      {%- if product.tags contains 'limited' -%}
+        <span class="sw-y2k-badge sw-y2k-badge--limited">LTD</span>
+      {%- endif -%}
+    </div>
+
+  </div>
+</div>
+
+<script>
+  /* Simplified Quick Add for Y2K Card */
+  if (typeof swY2KInitAttached === 'undefined') {
+    window.swY2KInitAttached = true;
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.sw-js-add-to-cart');
+      if (!btn) return;
+
+      e.preventDefault();
+      const variantId = btn.getAttribute('data-variant-id');
+      
+      btn.classList.add('is-loading');
+      fetch(window.Shopify.routes.root + 'cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: variantId, quantity: 1 })
+      })
+      .then(r => r.json())
+      .then(() => {
+        document.dispatchEvent(new CustomEvent('cart:updated'));
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>';
+        setTimeout(() => {
+          btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>';
+        }, 2000);
+      })
+      .catch(err => console.error('Add error:', err));
+    });
+  }
+</script>

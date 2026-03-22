@@ -1,0 +1,161 @@
+{%- liquid
+  assign font_family = 'var(--font-heading)'
+  if section.settings.font == 'display'
+    assign font_family = 'var(--font-display)'
+  endif
+
+  assign align = 'center'
+  if section.settings.alignment == 'left'
+    assign align = 'flex-start'
+  elsif section.settings.alignment == 'right'
+    assign align = 'flex-end'
+  endif
+  
+  assign text_align = section.settings.alignment
+-%}
+
+{%- style -%}
+  .sw-text-stmt-{{ section.id }} {
+    padding-top: var(--pad-section-m);
+    padding-bottom: var(--pad-section-m);
+    background-color: var(--color-bg);
+  }
+  @media (min-width: 1024px) {
+    .sw-text-stmt-{{ section.id }} {
+      padding-top: var(--pad-section);
+      padding-bottom: var(--pad-section);
+    }
+  }
+  .sw-text-stmt__inner {
+    max-width: var(--max-narrow);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: {{ align }};
+    text-align: {{ text_align }};
+  }
+  .sw-text-stmt__eyebrow {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-bg-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: var(--sp-4);
+  }
+  .sw-text-stmt__heading {
+    font-family: {{ font_family }};
+    font-size: clamp(48px, 6vw, 64px);
+    color: var(--color-text);
+    line-height: 1.1;
+    margin-bottom: var(--sp-6);
+    {% if section.settings.font == 'heading' %}
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    {% endif %}
+  }
+  .sw-text-stmt__body {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: clamp(16px, 2vw, 22px);
+    color: var(--color-muted);
+    line-height: 1.6;
+    margin-bottom: var(--sp-8);
+    max-width: 700px;
+  }
+  .sw-text-stmt__cta {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--color-text);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding-bottom: 2px;
+    border-bottom: 1px solid var(--color-text);
+    transition: color var(--dur-fast), border-color var(--dur-fast);
+  }
+  .sw-text-stmt__cta:hover {
+    color: var(--color-text-chalk);
+    border-color: var(--color-text-chalk);
+  }
+{%- endstyle -%}
+
+<section class="sw-text-stmt-{{ section.id }} sw-reveal">
+  <div class="sw-container">
+    <div class="sw-text-stmt__inner">
+      {%- if section.settings.eyebrow != blank -%}
+        <div class="sw-text-stmt__eyebrow">{{ section.settings.eyebrow }}</div>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="sw-text-stmt__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.body != blank -%}
+        <div class="sw-text-stmt__body">{{ section.settings.body }}</div>
+      {%- endif -%}
+      {%- if section.settings.cta_label != blank and section.settings.cta_link != blank -%}
+        <a href="{{ section.settings.cta_link }}" class="sw-text-stmt__cta">{{ section.settings.cta_label }}</a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Text Statement",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "ESTABLISHED 2021"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "MINIMAL STREETWEAR DONE RIGHT"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body",
+      "default": "<p>A local audience approach without being apologetic about it. We build capsule drops designed to sell out in minutes.</p>"
+    },
+    {
+      "type": "select",
+      "id": "font",
+      "label": "Heading Font",
+      "options": [
+        { "value": "heading", "label": "Space Grotesk (Tech)" },
+        { "value": "display", "label": "Syne (Display)" }
+      ],
+      "default": "heading"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button Label",
+      "default": "READ THE STORY"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Text Statement"
+    }
+  ]
+}
+{% endschema %}

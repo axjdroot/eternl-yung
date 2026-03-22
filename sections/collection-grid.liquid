@@ -1,0 +1,164 @@
+{%- style -%}
+  .sw-collection-grid {
+    padding: var(--sp-12) 0;
+    background-color: var(--color-bg);
+  }
+
+  .sw-collection-grid__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    margin-bottom: var(--sp-12);
+    text-align: center;
+  }
+
+  .sw-collection-grid__label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: #388D73;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+
+  .sw-collection-grid__title {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4vw, 56px);
+    color: var(--color-text);
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  .sw-collection-grid__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-4);
+  }
+
+  @media (min-width: 768px) {
+    .sw-collection-grid__grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-6);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .sw-collection-grid__grid {
+      grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+      gap: var(--sp-8);
+    }
+  }
+
+  .sw-collection-grid__footer {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--sp-12);
+  }
+
+  .sw-collection-grid__btn {
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: none;
+  }
+
+  .sw-collection-grid__btn:hover {
+    background-color: #388D73;
+    color: #0D0D0D;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(202, 255, 0, 0.2);
+  }
+{%- endstyle -%}
+
+<section class="sw-collection-grid sw-reveal">
+  <div class="sw-container">
+    
+    <div class="sw-collection-grid__header">
+      {%- if section.settings.label != blank -%}
+        <span class="sw-collection-grid__label">{{ section.settings.label }}</span>
+      {%- endif -%}
+      {%- if section.settings.title != blank or section.settings.collection.title != blank -%}
+        <h2 class="sw-collection-grid__title">{{ section.settings.title | default: section.settings.collection.title }}</h2>
+      {%- endif -%}
+    </div>
+
+    <div class="sw-collection-grid__grid">
+      {%- if section.settings.collection != blank -%}
+        {%- for product in section.settings.collection.products limit: section.settings.limit -%}
+          {%- render 'product-card', product: product, lazy_load: true -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..section.settings.limit) -%}
+          <div class="sw-product-card-wrap">
+            <div class="sw-product-card" style="aspect-ratio: 3/4; background: #EEE; border-radius: 20px;"></div>
+            <div class="sw-product-card__info-pill" style="margin-top: 12px; height: 44px; background: #EEE; border-radius: 9999px;"></div>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.show_view_all and section.settings.collection != blank -%}
+      <div class="sw-collection-grid__footer">
+        <a href="{{ section.settings.collection.url }}" class="sw-collection-grid__btn sw-btn sw-btn--primary">
+          VIEW ALL {{ section.settings.collection.title | upcase }}
+        </a>
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collection Grid",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "CURATED DROP"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Custom Title",
+      "info": "Leave blank to use collection title"
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4,
+      "label": "Product Limit"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4,
+      "label": "Columns on Desktop"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show View All Button",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Grid",
+      "settings": {
+        "limit": 4,
+        "columns_desktop": 4
+      }
+    }
+  ]
+}
+{% endschema %}

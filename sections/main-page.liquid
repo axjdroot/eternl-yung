@@ -1,0 +1,52 @@
+{%- style -%}
+  .sw-page {
+    padding-top: var(--sp-12);
+    padding-bottom: var(--sp-16);
+    background-color: var(--color-bg);
+    min-height: 60vh;
+  }
+  .sw-page__title {
+    font-family: var(--font-heading-alt);
+    font-size: clamp(32px, 5vw, 48px);
+    color: var(--color-text);
+    text-transform: uppercase;
+    margin-bottom: var(--sp-8);
+  }
+  .sw-page__content {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--color-muted);
+  }
+  .sw-page__content h2, 
+  .sw-page__content h3 {
+    font-family: var(--font-heading-alt);
+    color: var(--color-text);
+    margin-top: var(--sp-6);
+    margin-bottom: var(--sp-3);
+  }
+  .sw-page__content p {
+    margin-bottom: var(--sp-4);
+  }
+  .sw-page__content a {
+    color: var(--color-text);
+    text-decoration: underline;
+  }
+{%- endstyle -%}
+
+<div class="sw-page sw-reveal">
+  <div class="sw-container" style="max-width: var(--max-narrow);">
+    <h1 class="sw-page__title">{{ page.title }}</h1>
+    <div class="sw-page__content">
+      {{ page.content }}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Page",
+  "settings": []
+}
+{% endschema %}

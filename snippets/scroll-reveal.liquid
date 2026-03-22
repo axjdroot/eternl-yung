@@ -1,0 +1,39 @@
+{% doc %}
+  Vanilla JS Intersection Observer to reveal elements on scroll.
+  Watches all .sw-reveal elements and adds .is-visible class.
+  Checks for prefers-reduced-motion and reveals all immediately if active.
+{% enddoc %}
+
+<script>
+  /* [PHASE 1] 2026-03-08 — Intersection Observer scroll reveal logic */
+  document.addEventListener('DOMContentLoaded', () => {
+    const reveals = document.querySelectorAll('.sw-reveal');
+    if (!reveals.length) return;
+
+    // Prefers reduced motion check
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      reveals.forEach(el => el.classList.add('is-visible'));
+      return;
+    }
+
+    const observerOption = {
+      root: null,
+      rootMargin: '0px 0px -50px 0px',
+      threshold: 0
+    };
+
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOption);
+
+    reveals.forEach(reveal => {
+      revealObserver.observe(reveal);
+    });
+  });
+</script>

@@ -1,0 +1,67 @@
+{%- style -%}
+  .sw-404 {
+    height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: var(--color-bg);
+  }
+  .sw-404__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .sw-404__title {
+    font-family: var(--font-display);
+    font-size: clamp(80px, 15vw, 150px);
+    color: var(--color-text);
+    line-height: 1;
+    margin-bottom: var(--sp-4);
+  }
+  .sw-404__sub {
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--sp-8);
+  }
+  .sw-404__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 56px;
+    padding: 0 40px;
+    background-color: var(--color-bg-accent);
+    color: var(--color-text-accent);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: filter var(--dur-fast) ease;
+  }
+  .sw-404__btn:hover {
+    filter: brightness(1.1);
+  }
+{%- endstyle -%}
+
+<div class="sw-404 sw-reveal">
+  <div class="sw-container">
+    <div class="sw-404__inner">
+      <h1 class="sw-404__title">404</h1>
+      <p class="sw-404__sub">{{ 'templates.404.subtext' | t | default: 'PAGE NOT FOUND' }}</p>
+      <a href="{{ routes.all_products_collection_url }}" class="sw-404__btn">
+        {{ 'templates.404.title' | t | default: 'BACK TO SHOP' }}
+      </a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "404 Page",
+  "settings": []
+}
+{% endschema %}

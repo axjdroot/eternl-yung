@@ -1,0 +1,202 @@
+{%- style -%}
+  .sw-faqs-section {
+    padding: var(--pad-section-m) 0;
+    background-color: #FFFFFF;
+  }
+  @media (min-width: 1024px) {
+    .sw-faqs-section {
+      padding: var(--pad-section) 0;
+    }
+  }
+
+  .sw-faqs-card {
+    background-color: #1A1A1A;
+    color: #FFFFFF;
+    border-radius: 16px;
+    padding: var(--sp-6) var(--sp-4);
+    margin: 0 auto;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+  }
+  @media (min-width: 768px) {
+    .sw-faqs-card {
+      padding: var(--sp-8) var(--sp-16);
+    }
+  }
+
+  .sw-faqs-header {
+    margin-bottom: var(--sp-12);
+    text-align: left;
+  }
+  .sw-faqs-title {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: clamp(36px, 6vw, 56px);
+    color: #FFFFFF;
+  }
+
+  /* Accordion override for dark mode */
+  .sw-faqs-list {
+    border-top: 1px solid #333333;
+  }
+  .sw-faq-item {
+    border-bottom: 1px solid #333333;
+  }
+  .sw-faq-trigger {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--sp-6) 0;
+    background: none;
+    border: none;
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 500;
+    color: #FFFFFF;
+    cursor: pointer;
+    text-align: left;
+  }
+  .sw-faq-icon {
+    font-size: 20px;
+    font-weight: 300;
+  }
+  .sw-faq-icon::after {
+    content: '+';
+  }
+  .sw-faq-item.is-open .sw-faq-icon::after {
+    content: '−';
+  }
+  .sw-faq-content {
+    padding-bottom: var(--sp-6);
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: #F0F0F0;
+    line-height: 1.6;
+    display: none;
+  }
+  .sw-faq-item.is-open .sw-faq-content {
+    display: block;
+  }
+{%- endstyle -%}
+
+<section class="sw-faqs-section sw-reveal" data-section-id="{{ section.id }}">
+  <div class="sw-container">
+    <div class="sw-faqs-card">
+      <div class="sw-faqs-header">
+      <h2 class="sw-faqs-title">{{ section.settings.heading | default: 'FAQs' }}</h2>
+    </div>
+
+    <div class="sw-faqs-list">
+      {%- for block in section.blocks -%}
+        <div class="sw-faq-item" {{ block.shopify_attributes }}>
+          <button class="sw-faq-trigger" aria-expanded="false">
+            {{ block.settings.question }}
+            <span class="sw-faq-icon"></span>
+          </button>
+          <div class="sw-faq-content">
+            {{ block.settings.answer }}
+          </div>
+        </div>
+      {%- else -%}
+        <!-- Example blocks if none added -->
+        <div class="sw-faq-item is-open">
+          <button class="sw-faq-trigger" aria-expanded="true">
+            What are the payment methods?
+            <span class="sw-faq-icon"></span>
+          </button>
+          <div class="sw-faq-content" style="display: block;">
+            We accept all major credit cards, PayPal, and Apple Pay for secure and quick transactions.
+          </div>
+        </div>
+        <div class="sw-faq-item">
+          <button class="sw-faq-trigger" aria-expanded="false">
+            Does {{ shop.name }} ship to my city?
+            <span class="sw-faq-icon"></span>
+          </button>
+          <div class="sw-faq-content">
+            Yes, we provide nationwide and international shipping through our logistic partners.
+          </div>
+        </div>
+        <div class="sw-faq-item">
+          <button class="sw-faq-trigger" aria-expanded="false">
+            When can I expect to receive my package?
+            <span class="sw-faq-icon"></span>
+          </button>
+          <div class="sw-faq-content">
+            Standard delivery takes 3-5 business days domestically, and 7-14 days internationally depending on the location.
+          </div>
+        </div>
+        <div class="sw-faq-item">
+          <button class="sw-faq-trigger" aria-expanded="false">
+            What is the return policy at {{ shop.name }}?
+            <span class="sw-faq-icon"></span>
+          </button>
+          <div class="sw-faq-content">
+            We offer a 14-day hassle-free return policy. Items must be unworn and in original packaging.
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const triggers = document.querySelectorAll('.sw-faq-trigger');
+    triggers.forEach(acc => {
+      acc.addEventListener('click', () => {
+        const item = acc.closest('.sw-faq-item');
+        const content = item.querySelector('.sw-faq-content');
+        const isOpen = item.classList.contains('is-open');
+        
+        if(isOpen) {
+          item.classList.remove('is-open');
+          acc.setAttribute('aria-expanded', 'false');
+          content.style.display = 'none';
+        } else {
+          item.classList.add('is-open');
+          acc.setAttribute('aria-expanded', 'true');
+          content.style.display = 'block';
+        }
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Product FAQs",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "FAQs"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "Answer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product FAQs"
+    }
+  ]
+}
+{% endschema %}

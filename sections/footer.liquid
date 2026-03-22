@@ -1,57 +1,336 @@
-<footer>
-  <div class="footer__copyright">
-    &copy;
-    {{ 'now' | date: '%Y' }}
-    {{ shop.name | link_to: routes.root_url }}, {{ powered_by_link }}
+{%- style -%}
+  .sw-footer-new {
+    background-color: #0D0D0D;
+    color: #FFFFFF;
+    padding: var(--sp-12) 0 var(--sp-8);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sw-footer-new::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #388D73, #5fb8af, #388D73);
+    background-size: 200% 100%;
+    animation: gradient-flow 4s linear infinite;
+  }
+
+  @keyframes gradient-flow {
+    0% { background-position: 100% 0%; }
+    100% { background-position: -100% 0%; }
+  }
+
+  .sw-footer-new__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-12);
+  }
+
+  @media (min-width: 1024px) {
+    .sw-footer-new__grid {
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      align-items: start;
+    }
+  }
+
+  /* Newsletter Section */
+  .sw-footer-new__newsletter {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-6);
+  }
+
+  .sw-footer-new__heading {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 5vw, 48px);
+    line-height: 0.9;
+    color: #388D73;
+    text-transform: uppercase;
+    margin-bottom: var(--sp-2);
+  }
+
+  .sw-footer-new__subtext {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    max-width: 300px;
+    line-height: 1.5;
+  }
+
+  .sw-footer-new__form {
+    display: flex;
+    gap: var(--sp-2);
+    margin-top: var(--sp-4);
+  }
+
+  .sw-footer-new__input {
+    flex: 1;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: var(--sp-3) var(--sp-4);
+    color: #FFFFFF;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    transition: border-color 0.3s ease;
+  }
+
+  .sw-footer-new__input:focus {
+    border-color: #388D73;
+  }
+
+  .sw-footer-new__submit {
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: none;
+    height: 44px;
+  }
+
+  .sw-footer-new__submit:hover {
+    transform: scale(1.05) translate(-2px, -2px);
+  }
+
+  /* Links Section */
+  .sw-footer-new__link-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+  }
+
+  .sw-footer-new__label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+  }
+
+  .sw-footer-new__label::after {
+    content: '';
+    height: 1px;
+    flex: 1;
+    background: rgba(255,255,255,0.1);
+  }
+
+  .sw-footer-new__list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+
+  .sw-footer-new__link {
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: #FFFFFF;
+    transition: color 0.2s ease, padding-left 0.2s ease;
+    display: inline-block;
+  }
+
+  .sw-footer-new__link:hover {
+    color: #388D73;
+    padding-left: var(--sp-2);
+  }
+
+  /* Bottom Bar */
+  .sw-footer-new__bottom {
+    margin-top: var(--sp-12);
+    padding-top: var(--sp-8);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-6);
+    align-items: center;
+  }
+
+  @media (min-width: 768px) {
+    .sw-footer-new__bottom {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+
+  .sw-footer-new__copyright {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+  }
+
+  .sw-footer-new__socials {
+    display: flex;
+    gap: var(--sp-4);
+  }
+
+  .sw-footer-new__social-link {
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+
+  .sw-footer-new__social-link:hover {
+    background: #388D73;
+    color: #000;
+    border-color: #388D73;
+    transform: rotate(10deg);
+  }
+
+  .sw-footer-new__social-link svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+
+  /* Large Rotating Logo background text (Optional Flair) */
+  .sw-footer-new__bg-text {
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    font-family: var(--font-display);
+    font-size: 180px;
+    color: rgba(202, 255, 0, 0.03);
+    pointer-events: none;
+    line-height: 1;
+    text-transform: uppercase;
+    z-index: 0;
+    user-select: none;
+  }
+
+{%- endstyle -%}
+
+<footer class="sw-footer-new">
+  <div class="sw-container">
+    <div class="sw-footer-new__grid">
+      
+      <!-- Newsletter -->
+      <div class="sw-footer-new__newsletter">
+        <h2 classsw-footer-new__heading">{{ section.settings.newsletter_heading | default: 'ETERNL YUNG.' }}</h2>
+        <p class="sw-footer-new__subtext">{{ section.settings.newsletter_subtext | default: 'Stay connected to the Yung vision. Exclusive drops and capsule alerts.' }}</p>
+        
+        {%- form 'customer', class: 'sw-footer-new__form' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <input type="email"
+            name="contact[email]"
+            class="sw-footer-new__input"
+            placeholder="ENTER EMAIL"
+            required>
+          <button type="submit" class="sw-footer-new__submit sw-btn sw-btn--accent">JOIN</button>
+        {%- endform -%}
+      </div>
+
+      <!-- Menus (Dynamically loaded from blocks) -->
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'link_list' -%}
+          <div class="sw-footer-new__link-group" {{ block.shopify_attributes }}>
+            <span class="sw-footer-new__label">{{ block.settings.heading }}</span>
+            <ul class="sw-footer-new__list">
+              {%- for link in block.settings.menu.links -%}
+                <li><a href="{{ link.url }}" class="sw-footer-new__link">{{ link.title }}</a></li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+
+    </div>
+
+    <!-- Bottom -->
+    <div class="sw-footer-new__bottom">
+      <div class="sw-footer-new__copyright">
+        &copy; {{ 'now' | date: "%Y" }} {{ shop.name }}. ETERNL VISION. ALL RIGHTS RESERVED.
+      </div>
+
+      <div class="sw-footer-new__socials">
+        {%- if settings.social_instagram_link != blank -%}
+          <a href="{{ settings.social_instagram_link }}" class="sw-footer-new__social-link" aria-label="Instagram">
+            <svg viewBox="0 0 24 24"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 3.25.15 4.77 1.69 4.92 4.92.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.15 3.23-1.66 4.77-4.92 4.92-1.27.06-1.64.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.64-.07-4.85s.01-3.58.07-4.85c.15-3.23 1.66-4.77 4.92-4.92 1.27-.06 1.64-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07c-4.27.2-6.78 2.71-6.98 6.98C0 8.33 0 8.74 0 12s.01 3.67.07 4.95c.2 4.27 2.71 6.78 6.98 6.98 1.28.06 1.69.07 4.95.07s3.67-.01 4.95-.07c4.27-.2 6.78-2.71 6.98-6.98.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.2-4.27-2.71-6.78-6.98-6.98C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1018.16 12 6.16 6.16 0 0012 5.84zm0 10.16A4 4 0 1116 12a4 4 0 01-4 4zm5.22-9.4a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"/></svg>
+          </a>
+        {%- endif -%}
+        {%- if settings.social_tiktok_link != blank -%}
+          <a href="{{ settings.social_tiktok_link }}" class="sw-footer-new__social-link" aria-label="TikTok">
+            <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 15.68 6.34 6.34 0 0011.33 22 6.34 6.34 0 0017.67 15.68V8.75a8.21 8.21 0 004.83,1.52V6.82a4.84 4.84 0 01-2.91-1.13z"/></svg>
+          </a>
+        {%- endif -%}
+        {%- if settings.social_twitter_link != blank -%}
+          <a href="{{ settings.social_twitter_link }}" class="sw-footer-new__social-link" aria-label="Twitter">
+            <svg viewBox="0 0 24 24"><path d="M18.9 2H22l-6.7 7.7 7.9 10.4h-6.2l-4.9-6.4-5.5 6.4H3.5l7.1-8.2L3 2h6.3l4.4 5.9L18.9 2zm-1.1 16.3h1.7L9.2 3.7H7.4l10.4 14.6z"/></svg>
+          </a>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.show_payment_icons -%}
+        <div style="display: flex; gap: 8px; opacity: 0.5;">
+          {%- for type in shop.enabled_payment_types -%}
+            {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
   </div>
 
-  <div class="footer__links">
-    {% for link in section.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
-    {% endfor %}
-  </div>
-
-  <div class="footer__payment">
-    {% if section.settings.show_payment_icons %}
-      {% for type in shop.enabled_payment_types %}
-        {{ type | payment_type_svg_tag }}
-      {% endfor %}
-    {% endif %}
-  </div>
+  <div class="sw-footer-new__bg-text">{{ shop.name | slice: 0, 4 }}</div>
 </footer>
-
-{% stylesheet %}
-  footer {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
-  }
-  footer a {
-    text-decoration: none;
-    color: var(--color-foreground);
-  }
-  footer .footer__links,
-  footer .footer__payment {
-    display: flex;
-    gap: 1rem;
-  }
-{% endstylesheet %}
 
 {% schema %}
 {
-  "name": "t:general.footer",
+  "name": "Footer",
   "settings": [
     {
-      "type": "link_list",
-      "id": "menu",
-      "label": "t:labels.menu"
+      "type": "text",
+      "id": "newsletter_heading",
+      "label": "Newsletter Heading",
+      "default": "ETERNL YUNG."
+    },
+    {
+      "type": "textarea",
+      "id": "newsletter_subtext",
+      "label": "Newsletter Subtext",
+      "default": "Stay connected to the Yung vision. Exclusive drops and capsule alerts."
     },
     {
       "type": "checkbox",
       "id": "show_payment_icons",
-      "label": "t:labels.show_payment_icons",
+      "label": "Show payment icons",
       "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link_list",
+      "name": "Menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "NAV"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer",
+      "blocks": [
+        { "type": "link_list", "settings": { "heading": "PROJECTS" } },
+        { "type": "link_list", "settings": { "heading": "SUPPORT" } }
+      ]
     }
   ]
 }
 {% endschema %}
+

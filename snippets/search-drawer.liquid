@@ -1,0 +1,294 @@
+{%- style -%}
+  .sw-search-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    max-width: 420px;
+    height: 100vh;
+    height: 100dvh;
+    background-color: var(--color-bg);
+    border-left: 1px solid var(--color-border);
+    border-radius: 24px 0 0 24px;
+    z-index: 2000;
+    transform: translateX(100%);
+    transition: transform var(--dur-base) var(--ease-out);
+    display: flex;
+    flex-direction: column;
+  }
+  .sw-search-drawer.is-open {
+    transform: translateX(0);
+  }
+  .sw-search-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    background-color: rgba(0,0,0,0.6);
+    z-index: 1999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--dur-base) var(--ease-out);
+  }
+  .sw-search-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  /* Header */
+  .sw-search-drawer__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--sp-4) var(--sp-6);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .sw-search-drawer__title {
+    font-family: var(--font-heading-alt);
+    font-size: 18px;
+    color: var(--color-text);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .sw-search-drawer__close {
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--color-text);
+    padding: var(--sp-2) 0 var(--sp-2) var(--sp-2);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* Body */
+  .sw-search-drawer__body {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--sp-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+  }
+  
+  .sw-search-form {
+    position: relative;
+    margin-bottom: var(--sp-4);
+  }
+  .sw-search-input {
+    width: 100%;
+    height: 48px;
+    padding: 0 var(--sp-4);
+    font-family: var(--font-body);
+    font-size: 14px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    outline: none;
+  }
+  .sw-search-input:focus {
+    border-color: var(--color-text);
+  }
+
+  /* Results */
+  .sw-search-results {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+  }
+  
+  .sw-search-item {
+    display: flex;
+    gap: var(--sp-4);
+    text-decoration: none;
+  }
+  .sw-search-item__media {
+    width: 60px;
+    height: 80px;
+    background-color: var(--color-bg-chalk);
+    flex-shrink: 0;
+  }
+  .sw-search-item__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .sw-search-item__details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .sw-search-item__title {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--color-text);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+  .sw-search-item__price {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-text);
+  }
+  
+  .sw-search-status {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--color-muted);
+    text-align: center;
+    padding: var(--sp-4) 0;
+  }
+  
+  .sw-search-view-all {
+    display: block;
+    text-align: center;
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--color-text);
+    text-decoration: underline;
+    margin-top: var(--sp-4);
+    padding-top: var(--sp-4);
+    border-top: 1px solid var(--color-border);
+  }
+{%- endstyle -%}
+
+<div class="sw-search-overlay" id="sw-search-overlay" aria-hidden="true"></div>
+
+<div class="sw-search-drawer" id="sw-search-drawer" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="sw-search-drawer__header">
+    <h2 class="sw-search-drawer__title">SEARCH</h2>
+    <button type="button" class="sw-search-drawer__close" id="sw-search-close" aria-label="Close search">✕</button>
+  </div>
+
+  <div class="sw-search-drawer__body">
+    <form action="{{ routes.search_url }}" method="get" class="sw-search-form" role="search">
+      <input type="hidden" name="type" value="product">
+      <input 
+        type="search" 
+        name="q" 
+        id="sw-search-input" 
+        class="sw-search-input" 
+        placeholder="Search for products..." 
+        autocomplete="off"
+      >
+    </form>
+
+    <div id="sw-search-status" class="sw-search-status" style="display: none;"></div>
+    <div class="sw-search-results" id="sw-search-results"></div>
+    <a href="{{ routes.search_url }}" id="sw-search-view-all" class="sw-search-view-all" style="display: none;">View all results</a>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const drawer = document.getElementById('sw-search-drawer');
+    const overlay = document.getElementById('sw-search-overlay');
+    const closeBtn = document.getElementById('sw-search-close');
+    const input = document.getElementById('sw-search-input');
+    const resultsContainer = document.getElementById('sw-search-results');
+    const statusText = document.getElementById('sw-search-status');
+    const viewAllLink = document.getElementById('sw-search-view-all');
+    const html = document.documentElement;
+    let debounceTimer;
+
+    // Drawer Visibility
+    function openDrawer() {
+      drawer.classList.add('is-open');
+      overlay.classList.add('is-open');
+      html.classList.add('has-mobile-menu-open');
+      setTimeout(() => input.focus(), 300);
+    }
+    
+    function closeDrawer() {
+      drawer.classList.remove('is-open');
+      overlay.classList.remove('is-open');
+      html.classList.remove('has-mobile-menu-open');
+    }
+
+    if (closeBtn && overlay) {
+      closeBtn.addEventListener('click', closeDrawer);
+      overlay.addEventListener('click', closeDrawer);
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && drawer.classList.contains('is-open')) closeDrawer();
+      });
+    }
+
+    // Trigger from exterior buttons
+    document.querySelectorAll('[aria-controls="search-drawer"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        openDrawer();
+      });
+    });
+
+    // Predictive Search Logic
+    if (input) {
+      input.addEventListener('input', (e) => {
+        const query = e.target.value.trim();
+        
+        clearTimeout(debounceTimer);
+        
+        if (query.length === 0) {
+          resultsContainer.innerHTML = '';
+          statusText.style.display = 'none';
+          viewAllLink.style.display = 'none';
+          return;
+        }
+
+        debounceTimer = setTimeout(() => {
+          performSearch(query);
+        }, 300);
+      });
+    }
+
+    function performSearch(query) {
+      statusText.style.display = 'block';
+      statusText.textContent = 'Searching...';
+      resultsContainer.innerHTML = '';
+      viewAllLink.style.display = 'none';
+
+      fetch(`${window.Shopify.routes.root}search/suggest.json?q=${encodeURIComponent(query)}&resources[type]=product&resources[limit]=6`)
+        .then(response => response.json())
+        .then(data => {
+          const products = data.resources.results.products;
+          statusText.style.display = 'none';
+
+          if (products && products.length > 0) {
+            products.forEach(product => {
+              const price = product.price ? product.price : '';
+              
+              let imgHtml = `<div class="sw-search-item__img" style="background:#ECECEC"></div>`;
+              if (product.image) {
+                imgHtml = `<img src="${product.image}" alt="${product.title}" class="sw-search-item__img">`;
+              }
+              
+              resultsContainer.innerHTML += `
+                <a href="${product.url}" class="sw-search-item">
+                  <div class="sw-search-item__media">
+                    ${imgHtml}
+                  </div>
+                  <div class="sw-search-item__details">
+                    <div class="sw-search-item__title">${product.title}</div>
+                    <div class="sw-search-item__price">${price}</div>
+                  </div>
+                </a>
+              `;
+            });
+            
+            viewAllLink.href = `${window.Shopify.routes.root}search?q=${encodeURIComponent(query)}&type=product`;
+            viewAllLink.style.display = 'block';
+          } else {
+            statusText.style.display = 'block';
+            statusText.textContent = 'No results found.';
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching search results:', error);
+          statusText.style.display = 'block';
+          statusText.textContent = 'Something went wrong. Please try again.';
+        });
+    }
+  });
+</script>

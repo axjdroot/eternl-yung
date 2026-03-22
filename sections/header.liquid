@@ -1,76 +1,400 @@
-<header>
-  <h2 class="header__title">
-    {{ shop.name | link_to: routes.root_url }}
-  </h2>
-
-  <div class="header__menu">
-    {% for link in section.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
-    {% endfor %}
-  </div>
-
-  <div class="header__icons">
-    {% if shop.customer_accounts_enabled %}
-      <shopify-account menu="{{ section.settings.customer_account_menu }}">
-        {{ 'icon-account.svg' | inline_asset_content }}
-      </shopify-account>
-    {% endif %}
-
-    <a href="{{ routes.cart_url }}">
-      {% if cart.item_count > 0 %}
-        <sup>{{ cart.item_count }}</sup>
-      {% endif %}
-
-      {{ 'icon-cart.svg' | inline_asset_content }}
-    </a>
-  </div>
-</header>
-
-{% stylesheet %}
-  header {
-    height: 5rem;
+{%- style -%}
+  .sw-header-wrapper {
+    background-color: #1A1A1A;
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: background-color 0.3s ease;
+  }
+  .sw-header-wrapper.scrolled {
+    background-color: transparent;
+  }
+  .sw-header {
+    position: relative;
+    z-index: 100;
+    background-color: #FFFFFF;
+    border-radius: 24px 24px 0 0;
+    transition: background-color 0.3s ease, backdrop-filter 0.3s ease, -webkit-backdrop-filter 0.3s ease;
+  }
+  .sw-header-wrapper.scrolled .sw-header {
+    background-color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .sw-header__inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    height: 64px;
+    padding: 0 var(--sp-6);
   }
-  header a {
-    position: relative;
-    text-decoration: none;
-    color: var(--color-foreground);
+  .sw-header__left {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-4);
+    z-index: 10;
+  }
+  .sw-header__logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    z-index: 10;
+  }
+  .sw-header__logo-link {
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: #0D0D0D;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .sw-header__logo-img {
+    max-height: 32px;
+    width: auto;
+  }
+  .sw-header__logo-img {
+    max-height: 32px;
+    width: auto;
+  }
+  .sw-header__icons {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-4);
+    z-index: 10;
+  }
+  .sw-header__icon-btn {
+    color: #0D0D0D;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: var(--sp-1);
+    position: relative;
+    transition: opacity var(--dur-fast) ease;
   }
-  header a sup {
+  .sw-header__icon-btn:hover {
+    opacity: 0.6;
+  }
+  .sw-header__icon-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 1.5;
+  }
+  .sw-header__cart-badge {
     position: absolute;
-    left: 100%;
-    overflow: hidden;
-    max-width: var(--page-margin);
-  }
-  header svg {
-    width: 2rem;
-  }
-  header .header__menu,
-  header .header__icons {
+    top: -4px;
+    right: -6px;
+    background-color: #0D0D0D;
+    color: #FFFFFF;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
     display: flex;
-    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
   }
-{% endstylesheet %}
+  .sw-header__hamburger {
+    display: flex;
+    z-index: 10;
+  }
+
+  /* Desktop */
+  @media (min-width: 1024px) {
+    .sw-header__inner {
+      height: 72px;
+    }
+  }
+
+  /* Off-Canvas Slide Menu */
+  .sw-mobile-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    background-color: rgba(0,0,0,0);
+    z-index: 2000;
+    visibility: hidden;
+    transition: background-color var(--dur-base) var(--ease-out), visibility 0s var(--dur-base);
+    display: flex;
+  }
+  .sw-mobile-menu.is-open {
+    visibility: visible;
+    background-color: rgba(0,0,0,0.5);
+    transition: background-color var(--dur-base) var(--ease-out), visibility 0s 0s;
+  }
+  .sw-mobile-menu__panel {
+    width: 380px;
+    max-width: 85vw;
+    height: 100%;
+    background-color: var(--color-bg);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(-100%);
+    transition: transform var(--dur-base) var(--ease-out);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.2);
+    border-top-right-radius: 24px;
+    border-bottom-right-radius: 24px;
+    overflow: hidden;
+  }
+  .sw-mobile-menu.is-open .sw-mobile-menu__panel {
+    transform: translateX(0);
+  }
+  .sw-mobile-menu__header {
+    height: 52px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 var(--sp-4);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .sw-mobile-menu__close {
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--color-text);
+    padding: var(--sp-2);
+  }
+  .sw-mobile-menu__body {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--sp-8) var(--sp-4);
+  }
+  .sw-mobile-link-group {
+    margin-bottom: var(--sp-6);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all var(--dur-base) var(--ease-out);
+  }
+  .sw-mobile-menu.is-open .sw-mobile-link-group {
+    opacity: 1;
+    transform: none;
+  }
+  .sw-mobile-top-link {
+    font-family: var(--font-body);
+    font-size: 48px;
+    color: var(--color-text);
+    display: block;
+    line-height: 1.1;
+  }
+  .sw-mobile-sub-list {
+    margin-top: var(--sp-2);
+    padding-left: var(--sp-4);
+    border-left: 1px solid var(--color-border);
+  }
+  .sw-mobile-sub-link {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--color-muted);
+    display: block;
+    padding: var(--sp-2) 0;
+  }
+  .sw-mobile-menu__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--sp-6) var(--sp-4);
+    margin-top: auto;
+  }
+
+  .sw-mobile-menu__socials {
+    display: flex;
+    gap: var(--sp-3);
+  }
+  .sw-mobile-menu__social-link {
+    color: var(--color-text);
+    display: flex;
+    transition: opacity var(--dur-fast) ease;
+  }
+  .sw-mobile-menu__social-link:hover {
+    opacity: 0.6;
+  }
+  .sw-mobile-menu__social-link svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+
+  html.has-mobile-menu-open {
+    overflow: hidden;
+  }
+{%- endstyle -%}
+
+<div class="sw-header-wrapper">
+  <header class="sw-header">
+    <div class="sw-header__inner">
+      
+      <!-- Hamburger Container -->
+      <div class="sw-header__left">
+        <button class="sw-header__icon-btn" aria-label="{{ 'general.menu' | t | default: 'Menu' }}" id="sw-menu-toggle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square">
+            <path d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Logo -->
+      <div class="sw-header__logo">
+        <a href="{{ routes.root_url }}" class="sw-header__logo-link">
+          {%- if section.settings.logo != blank -%}
+            <img src="{{ section.settings.logo | image_url: width: 400 }}" 
+                 class="sw-header__logo-img" 
+                 alt="{{ shop.name }}" 
+                 width="{{ section.settings.logo.width }}"
+                 height="{{ section.settings.logo.height }}"
+                 loading="eager" />
+          {%- else -%}
+            {{ shop.name }}
+          {%- endif -%}
+        </a>
+      </div>
+
+
+      <!-- Right Icons -->
+      <div class="sw-header__icons">
+        <button class="sw-header__icon-btn" aria-controls="search-drawer" aria-expanded="false" aria-label="Search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square">
+            <circle cx="11" cy="11" r="7"/>
+            <path d="M20 20l-4-4"/>
+          </svg>
+        </button>
+        
+        <a href="{{ routes.account_url }}" class="sw-header__icon-btn" aria-label="Account" style="display: none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+        </a>
+        
+        <button class="sw-header__icon-btn" aria-controls="cart-drawer" aria-expanded="false" aria-label="Cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+            <path d="M3 6h18"/>
+            <path d="M16 10a4 4 0 01-8 0"/>
+          </svg>
+          {%- if cart.item_count > 0 -%}
+            <span class="sw-header__cart-badge">{{ cart.item_count }}</span>
+          {%- endif -%}
+        </button>
+      </div>
+
+    </div>
+  </header>
+</div>
+
+<!-- Slide Menu Overlay -->
+<div class="sw-mobile-menu" id="sw-mobile-overlay" role="dialog" aria-modal="true" aria-label="Navigation Menu">
+  <!-- Clickable backdrop to close -->
+  <div style="position: absolute; top:0; left:0; width:100%; height:100%;" id="sw-menu-backdrop"></div>
+  
+  <div class="sw-mobile-menu__panel">
+    <div class="sw-mobile-menu__header">
+      <button class="sw-mobile-menu__close" id="sw-menu-close" aria-label="Close menu">✕</button>
+    </div>
+    <div class="sw-mobile-menu__body">
+      {%- for link in section.settings.menu.links -%}
+        <div class="sw-mobile-link-group" style="transition-delay: {{ forloop.index | times: 60 }}ms">
+          <a href="{{ link.url }}" class="sw-mobile-top-link">{{ link.title }}</a>
+          {%- if link.links != blank -%}
+            <div class="sw-mobile-sub-list">
+              {%- for child_link in link.links -%}
+                <a href="{{ child_link.url }}" class="sw-mobile-sub-link">{{ child_link.title }}</a>
+                {%- if child_link.links != blank -%}
+                  {%- for grandchild_link in child_link.links -%}
+                    <a href="{{ grandchild_link.url }}" class="sw-mobile-sub-link" style="padding-left:16px">— {{ grandchild_link.title }}</a>
+                  {%- endfor -%}
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+    
+    <div class="sw-mobile-menu__footer">
+      <a href="mailto:{{ shop.email }}" class="sw-mobile-menu__social-link" aria-label="Email">
+        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+      </a>
+      <div class="sw-mobile-menu__socials">
+        <a href="{{ settings.social_tiktok_link | default: '#' }}" class="sw-mobile-menu__social-link" aria-label="TikTok">
+          <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 004 15.68 6.34 6.34 0 0010.33 22h.19a6.34 6.34 0 005.85-6.19V10.6a8.21 8.21 0 005.18 1.83v-3.32a4.87 4.87 0 01-1.96-2.42z"/></svg>
+        </a>
+          <a href="{{ settings.social_instagram_link | default: '#' }}" class="sw-mobile-menu__social-link" aria-label="Instagram">
+            <svg viewBox="0 0 24 24"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 3.25.15 4.77 1.69 4.92 4.92.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.15 3.23-1.66 4.77-4.92 4.92-1.27.06-1.64.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.64-.07-4.85s.01-3.58.07-4.85c.15-3.23 1.66-4.77 4.92-4.92 1.27-.06 1.64-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07c-4.27.2-6.78 2.71-6.98 6.98C0 8.33 0 8.74 0 12s.01 3.67.07 4.95c.2 4.27 2.71 6.78 6.98 6.98 1.28.06 1.69.07 4.95.07s3.67-.01 4.95-.07c4.27-.2 6.78-2.71 6.98-6.98.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.2-4.27-2.71-6.78-6.98-6.98C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1018.16 12 6.16 6.16 0 0012 5.84zm0 10.16A4 4 0 1116 12a4 4 0 01-4 4zm5.22-9.4a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"/></svg>
+          </a>
+        <a href="{{ settings.social_linkedin_link | default: '#' }}" class="sw-mobile-menu__social-link" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* [PHASE 2] Header scroll & mobile menu logic */
+  document.addEventListener('DOMContentLoaded', () => {
+    // Header Scroll Effect
+    const headerWrapper = document.querySelector('.sw-header-wrapper');
+    if (headerWrapper) {
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+          headerWrapper.classList.add('scrolled');
+        } else {
+          headerWrapper.classList.remove('scrolled');
+        }
+      }, { passive: true });
+    }
+
+    // Mobile Menu
+    const toggleBtn = document.getElementById('sw-menu-toggle');
+    const closeBtn = document.getElementById('sw-menu-close');
+    const overlay = document.getElementById('sw-mobile-overlay');
+    const backdrop = document.getElementById('sw-menu-backdrop');
+    const html = document.documentElement;
+
+    function openMenu() {
+      overlay.classList.add('is-open');
+      html.classList.add('has-mobile-menu-open');
+      document.querySelector('.sw-mobile-menu__panel').focus();
+    }
+
+    function closeMenu() {
+      overlay.classList.remove('is-open');
+      html.classList.remove('has-mobile-menu-open');
+      toggleBtn.focus();
+    }
+
+    if (toggleBtn && closeBtn && overlay) {
+      toggleBtn.addEventListener('click', openMenu);
+      closeBtn.addEventListener('click', closeMenu);
+      if (backdrop) backdrop.addEventListener('click', closeMenu);
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay.classList.contains('is-open')) {
+          closeMenu();
+        }
+      });
+    }
+  });
+</script>
 
 {% schema %}
 {
-  "name": "t:general.header",
+  "name": "Header",
   "settings": [
     {
-      "type": "link_list",
-      "id": "menu",
-      "label": "t:labels.menu"
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
     },
     {
       "type": "link_list",
-      "id": "customer_account_menu",
-      "label": "t:labels.customer_account_menu",
-      "default": "customer-account-main-menu"
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
     }
   ]
 }

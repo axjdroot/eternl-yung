@@ -1,0 +1,102 @@
+{%- style -%}
+  .sw-brand-statement {
+    padding: var(--pad-section-m) 0;
+    background-color: #FFFFFF;
+    text-align: center;
+  }
+  @media (min-width: 1024px) {
+    .sw-brand-statement {
+      padding: var(--pad-section) 0;
+    }
+  }
+  .sw-bs-icon {
+    width: 32px;
+    height: 32px;
+    margin: 0 auto var(--sp-4);
+  }
+  .sw-bs-quote {
+    font-family: var(--font-body);
+    font-size: clamp(16px, 3vw, 20px);
+    font-style: italic;
+    font-weight: 500;
+    color: #111111;
+    margin-bottom: var(--sp-6);
+    letter-spacing: 0.05em;
+  }
+  .sw-bs-socials {
+    display: flex;
+    justify-content: center;
+    gap: var(--sp-4);
+  }
+  .sw-bs-social-link {
+    color: #777777;
+    transition: color var(--dur-fast);
+  }
+  .sw-bs-social-link:hover {
+    color: #111111;
+  }
+  .sw-bs-social-link svg {
+    width: 20px;
+    height: 20px;
+  }
+{%- endstyle -%}
+
+<section class="sw-brand-statement sw-reveal" data-section-id="{{ section.id }}">
+  <div class="sw-container">
+    {%- if section.settings.icon != blank -%}
+      <div class="sw-bs-icon">
+        <img src="{{ section.settings.icon | image_url: width: 64 }}" alt="Brand Icon" style="width:100%; height:auto;">
+      </div>
+    {%- else -%}
+      <div class="sw-bs-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+    {%- endif -%}
+
+    <div class="sw-bs-quote">
+      "{{ section.settings.quote | default: 'THE BRAND THAT SELLS A T-SHIRT EVERY 10 MINUTES' }}"
+    </div>
+
+    <div class="sw-bs-socials">
+      {%- if settings.social_instagram_link != blank -%}
+        <a href="{{ settings.social_instagram_link }}" class="sw-bs-social-link" target="_blank" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+        </a>
+      {%- endif -%}
+      {%- if settings.social_twitter_link != blank -%}
+        <a href="{{ settings.social_twitter_link }}" class="sw-bs-social-link" target="_blank" aria-label="Twitter">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+        </a>
+      {%- endif -%}
+      {%- if settings.social_tiktok_link != blank -%}
+        <a href="{{ settings.social_tiktok_link }}" class="sw-bs-social-link" target="_blank" aria-label="TikTok">
+           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Brand Statement",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "icon",
+      "label": "Small Center Icon"
+    },
+    {
+      "type": "textarea",
+      "id": "quote",
+      "label": "Italic Quote",
+      "default": "THE BRAND THAT SELLS A T-SHIRT EVERY 10 MINUTES"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Statement"
+    }
+  ]
+}
+{% endschema %}

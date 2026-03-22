@@ -1,36 +1,40 @@
 <!doctype html>
 <html lang="{{ request.locale.iso_code }}">
   <head>
-    {% # Inlined CSS Variables %}
-    {% render 'css-variables' %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    
+    <title>{{ page_title }}</title>
+    {% if page_description %}
+      <meta name="description" content="{{ page_description | escape }}">
+    {% endif %}
 
-    {% comment %}
-      Font preloading:
-      1. Preconnect to font CDN for faster connection
-      2. Preload only the critical font variant (base weight)
-      3. Additional variants load on-demand via @font-face
-    {% endcomment %}
-    {% unless settings.type_primary_font.system? %}
-      <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=Space+Mono&display=swap" rel="stylesheet">
 
-      {% comment %} Preload the base font variant for initial page render {% endcomment %}
-      {{ settings.type_primary_font | font_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
-    {% endunless %}
-
-    {% # Load and preload the critical CSS %}
-    {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
-
-    {% # Social, title, etc. %}
-    {% render 'meta-tags' %}
+    <!-- View Transitions API -->
+    <meta name="view-transition" content="same-origin">
 
     {{ content_for_header }}
+
+    <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}">
   </head>
 
   <body>
-    {% sections 'header-group' %}
+    {% section 'announcement-bar' %}
+    {% section 'header' %}
 
-    {{ content_for_layout }}
+    <main role="main">
+      {{ content_for_layout }}
+    </main>
 
-    {% sections 'footer-group' %}
+    {% section 'footer' %}
+
+    {% render 'cart-drawer' %}
+    {% render 'search-drawer' %}
+    {% render 'scroll-reveal' %}
+    
+    {{ content_for_scripts }}
   </body>
 </html>

@@ -1,0 +1,149 @@
+{%- liquid
+  assign bg_color = 'var(--color-bg)'
+  if section.settings.background == 'ghost'
+    assign bg_color = 'var(--color-bg-ghost)'
+  endif
+
+  assign font_family = 'var(--font-display)'
+  if section.settings.font == 'heading'
+    assign font_family = 'var(--font-heading-alt)'
+  endif
+
+  assign anim_duration = '25s'
+  if section.settings.speed == 'fast'
+    assign anim_duration = '14s'
+  elsif section.settings.speed == 'slow'
+    assign anim_duration = '40s'
+  endif
+
+  assign anim_direction = 'normal'
+  if section.settings.direction == 'right'
+    assign anim_direction = 'reverse'
+  endif
+-%}
+
+{%- style -%}
+  .sw-marquee-strip-{{ section.id }} {
+    background-color: {{ bg_color }};
+    padding: var(--sp-6) 0;
+    overflow: hidden;
+    position: relative;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    white-space: nowrap;
+  }
+  .sw-marquee-strip__track-{{ section.id }} {
+    display: flex;
+    animation: sw-marquee-{{ section.id }} {{ anim_duration }} linear infinite {{ anim_direction }};
+    will-change: transform;
+  }
+  .sw-marquee-strip__content {
+    display: inline-flex;
+    align-items: center;
+    padding-right: var(--sp-12);
+    gap: var(--sp-8);
+  }
+  .sw-marquee-strip__text {
+    font-family: {{ font_family }};
+    font-size: clamp(40px, 6vw, 80px);
+    color: var(--color-text);
+    text-transform: uppercase;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    gap: var(--sp-8);
+  }
+  .sw-marquee-strip__text span {
+    color: var(--color-bg-accent);
+  }
+
+  @keyframes sw-marquee-{{ section.id }} {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sw-marquee-strip__track-{{ section.id }} {
+      animation: none;
+      justify-content: center;
+      width: 100%;
+    }
+  }
+{%- endstyle -%}
+
+<section class="sw-marquee-strip-{{ section.id }} sw-reveal">
+  <div class="sw-marquee-strip__track-{{ section.id }}">
+    {%- for i in (1..4) -%}
+      <div class="sw-marquee-strip__content" aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}">
+        <div class="sw-marquee-strip__text">
+          {%- for block in section.blocks -%}
+            {{ block.settings.text }} <span>✦</span>
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Marquee Strip",
+  "settings": [
+    {
+      "type": "select",
+      "id": "font",
+      "label": "Font",
+      "options": [
+        { "value": "display", "label": "Syne (Display)" },
+        { "value": "heading", "label": "Space Grotesk (Tech)" }
+      ],
+      "default": "display"
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "Direction",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "speed",
+      "label": "Speed",
+      "options": [
+        { "value": "slow", "label": "Slow (40s)" },
+        { "value": "medium", "label": "Medium (25s)" },
+        { "value": "fast", "label": "Fast (14s)" }
+      ],
+      "default": "medium"
+    }
+  ],
+  "max_blocks": 5,
+  "blocks": [
+    {
+      "type": "marquee_item",
+      "name": "Phrase",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "STREETWEAR CAPSULE"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marquee Strip",
+      "blocks": [
+        { "type": "marquee_item", "settings": { "text": "THE BRAND THAT SELLS A T-SHIRT EVERY 10 MINUTES" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

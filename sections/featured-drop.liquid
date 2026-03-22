@@ -1,0 +1,296 @@
+{%- style -%}
+  .sw-featured-drop {
+    background-color: var(--color-bg);
+  }
+  .sw-drop-split {
+    display: flex;
+    flex-direction: column;
+  }
+  .sw-drop-split__media {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    background-color: var(--color-bg);
+  }
+  .sw-drop-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .sw-drop-split__content {
+    background-color: var(--color-bg-ghost);
+    padding: var(--sp-8) var(--sp-4);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  @media (min-width: 1024px) {
+    .sw-drop-split {
+      flex-direction: row;
+    }
+    .sw-drop-split--right {
+      flex-direction: row-reverse;
+    }
+    .sw-drop-split__media {
+      width: 55%;
+    }
+    .sw-drop-split__content {
+      width: 45%;
+      padding: var(--sp-12);
+    }
+  }
+
+  .sw-drop-banner {
+    position: relative;
+    width: 100%;
+    min-height: 60svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .sw-drop-banner__media {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+  .sw-drop-banner__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent 40%, rgba(13,13,13,0.85) 100%);
+    z-index: 2;
+  }
+  .sw-drop-banner__content {
+    position: relative;
+    z-index: 3;
+    padding: var(--sp-8) var(--sp-4);
+    width: 100%;
+  }
+  @media (min-width: 1024px) {
+    .sw-drop-banner__content {
+      padding: var(--sp-12) var(--sp-8);
+    }
+  }
+
+  .sw-drop__label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-bg-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: var(--sp-4);
+  }
+  .sw-drop__heading {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 5vw, 72px);
+    color: var(--color-text);
+    line-height: 1;
+    margin-bottom: var(--sp-4);
+  }
+  .sw-drop__body {
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--color-muted);
+    max-width: 500px;
+    margin-bottom: var(--sp-8);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .sw-drop__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    background-color: var(--color-bg-accent);
+    color: var(--color-text-accent);
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    width: 100%;
+    transition: filter var(--dur-fast) ease;
+  }
+  .sw-drop__cta:hover {
+    filter: brightness(1.1);
+  }
+  @media (min-width: 1024px) {
+    .sw-drop__cta {
+      width: 220px;
+    }
+  }
+{%- endstyle -%}
+
+<section class="sw-featured-drop sw-reveal">
+  {%- assign col_setting = section.settings.collection -%}
+  {%- if col_setting.handle != blank -%}
+    {%- assign featured_collection = col_setting -%}
+  {%- else -%}
+    {%- assign featured_collection = collections[col_setting] -%}
+  {%- endif -%}
+  
+  {%- assign drop_image = section.settings.image -%}
+  {%- if drop_image == blank and featured_collection != blank -%}
+    {%- assign drop_image = featured_collection.featured_image | default: featured_collection.image -%}
+  {%- endif -%}
+  
+  {%- assign drop_heading = section.settings.heading -%}
+  {%- if drop_heading == blank and featured_collection != blank -%}
+    {%- assign drop_heading = featured_collection.title -%}
+  {%- endif -%}
+  
+  {%- assign drop_body = section.settings.body -%}
+  {%- if drop_body == blank and featured_collection != blank -%}
+    {%- assign drop_body = featured_collection.description | strip_html | truncatewords: 30 -%}
+  {%- endif -%}
+  
+  {%- assign drop_cta_link = section.settings.cta_link -%}
+  {%- if drop_cta_link == blank and featured_collection != blank -%}
+    {%- assign drop_cta_link = featured_collection.url -%}
+  {%- endif -%}
+
+  {%- if section.settings.mode == 'split' -%}
+    <div class="sw-drop-split {% if section.settings.image_position == 'right' %}sw-drop-split--right{% endif %}">
+      <div class="sw-drop-split__media">
+        {%- if drop_image != blank -%}
+          {%- assign img_url = drop_image | image_url: width: 1200 -%}
+          <img src='{{ img_url }}' 
+               alt="{{ drop_heading | escape }}" 
+               class="sw-drop-img" 
+               loading="lazy">
+        {%- else -%}
+          {{ 'collection-2' | placeholder_svg_tag: 'sw-drop-img' }}
+        {%- endif -%}
+      </div>
+      <div class="sw-drop-split__content">
+        {%- if section.settings.label != blank -%}
+          <div class="sw-drop__label">{{ section.settings.label }}</div>
+        {%- endif -%}
+        {%- if drop_heading != blank -%}
+          <h2 class="sw-drop__heading">{{ drop_heading }}</h2>
+        {%- endif -%}
+        {%- if drop_body != blank -%}
+          <p class="sw-drop__body">{{ drop_body }}</p>
+        {%- endif -%}
+        {%- if section.settings.cta_label != blank -%}
+          <a href="{{ drop_cta_link | default: '#' }}" class="sw-drop__cta">{{ section.settings.cta_label }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- else -%}
+    <div class="sw-drop-banner">
+      <div class="sw-drop-banner__media">
+        {%- if drop_image != blank -%}
+          {%- assign img_url = drop_image | image_url: width: 2000 -%}
+          <img src='{{ img_url }}' 
+               alt="{{ drop_heading | escape }}" 
+               class="sw-drop-img" 
+               loading="lazy">
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'sw-drop-img' }}
+        {%- endif -%}
+        <div class="sw-drop-banner__overlay"></div>
+      </div>
+      <div class="sw-drop-banner__content">
+        <div class="sw-container">
+          {%- if section.settings.label != blank -%}
+            <div class="sw-drop__label">{{ section.settings.label }}</div>
+          {%- endif -%}
+          {%- if drop_heading != blank -%}
+            <h2 class="sw-drop__heading">{{ drop_heading }}</h2>
+          {%- endif -%}
+          {%- if drop_body != blank -%}
+            <p class="sw-drop__body">{{ drop_body }}</p>
+          {%- endif -%}
+          {%- if section.settings.cta_label != blank -%}
+            <a href="{{ drop_cta_link | default: '#' }}" class="sw-drop__cta">{{ section.settings.cta_label }}</a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Featured Drop",
+  "settings": [
+    {
+      "type": "select",
+      "id": "mode",
+      "label": "Layout Mode",
+      "options": [
+        { "value": "split", "label": "Split (55/45)" },
+        { "value": "banner", "label": "Full Width Banner" }
+      ],
+      "default": "split"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection to feature",
+      "info": "Overrides image, heading, body, and link if they are left blank."
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Desktop Image Position",
+      "info": "Only applies to Split mode.",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Custom Image",
+      "info": "Leave blank to use Collection image"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Drop Label",
+      "default": "FEATURED COLLECTION"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Custom Heading",
+      "info": "Leave blank to use Collection title"
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Custom Body Text",
+      "info": "Leave blank to use Collection description"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button Label",
+      "default": "SHOP COLLECTION"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Custom Button Link",
+      "info": "Leave blank to link to Collection URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Drop"
+    }
+  ]
+}
+{% endschema %}
