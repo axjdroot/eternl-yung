@@ -287,6 +287,8 @@
            alt="{{ collection.title | escape }}"
            class="sw-collection__banner-bg"
            loading="eager"
+           width="{{ collection.image.width }}"
+           height="{{ collection.image.height }}"
            decoding="async">
       <div class="sw-collection__banner-overlay"></div>
     {%- endif -%}

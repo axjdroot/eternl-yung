@@ -348,7 +348,12 @@
       <!-- Gallery Column -->
       <div class="sw-product-gallery">
         <div class="sw-product-main-media">
-          <img src="{{ product.featured_media | image_url: width: 1200 }}" alt="{{ product.title | escape }}" class="sw-product-main-img" id="sw-main-img">
+          <img src="{{ product.featured_media | image_url: width: 1200 }}" 
+               alt="{{ product.title | escape }}" 
+               class="sw-product-main-img" 
+               id="sw-main-img"
+               width="{{ product.featured_media.width }}"
+               height="{{ product.featured_media.height }}">
           <button class="sw-expand-btn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
           </button>
@@ -358,7 +363,10 @@
           <div class="sw-product-thumbnails">
             {%- for media in product.media -%}
               <div class="sw-thumbnail {% if forloop.first %}is-active{% endif %}" data-src="{{ media | image_url: width: 1200 }}">
-                <img src="{{ media | image_url: width: 150 }}" alt="{{ media.alt | escape }}">
+                <img src="{{ media | image_url: width: 150 }}" 
+                     alt="{{ media.alt | escape }}"
+                     width="150"
+                     height="150">
               </div>
             {%- endfor -%}
           </div>

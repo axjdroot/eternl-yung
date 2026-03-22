@@ -11,7 +11,9 @@
            alt="{{ block.settings.label | escape }}"
            loading="lazy"
            decoding="async"
-           class="sw-category-card__img">
+           class="sw-category-card__img"
+           width="{{ block.settings.image.width | default: 400 }}"
+           height="{{ block.settings.image.height | default: 500 }}">
     {%- else -%}
       {{ 'collection-1' | placeholder_svg_tag: 'sw-category-card__placeholder' }}
     {%- endif -%}

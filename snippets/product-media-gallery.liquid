@@ -101,7 +101,9 @@
              data-media-id="{{ media.id }}"
              {% if forloop.first %}style="display: block;"{% else %}style="display: none;"{% endif %}
              loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
-             decoding="async">
+             decoding="async"
+             width="{{ media.width | default: 1200 }}"
+             height="{{ media.height | default: 1600 }}">
       {%- endfor -%}
     </div>
     
@@ -116,7 +118,9 @@
                alt="{{ media.alt | escape }}"
                class="sw-product-media__thumb-img"
                loading="lazy"
-               decoding="async">
+               decoding="async"
+               width="72"
+               height="96">
         </button>
       {%- endfor -%}
     </div>

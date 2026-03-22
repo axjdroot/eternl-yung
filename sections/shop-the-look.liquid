@@ -157,7 +157,9 @@
             <img src="{{ section.settings.image | image_url: width: 1200 }}"
                  alt="{{ section.settings.label | escape | default: 'Shop the look' }}"
                  class="sw-shop-look__img"
-                 loading="lazy">
+                 loading="lazy"
+                 width="{{ section.settings.image.width | default: 800 }}"
+                 height="{{ section.settings.image.height | default: 1000 }}">
           {%- else -%}
             {{ 'lifestyle-2' | placeholder_svg_tag: 'sw-shop-look__img' }}
           {%- endif -%}
@@ -176,7 +178,9 @@
                 <img src="{{ product.featured_media | image_url: width: 120 }}"
                      alt="{{ product.title | escape }}"
                      class="sw-mini-product__img"
-                     loading="lazy">
+                     loading="lazy"
+                     width="60"
+                     height="80">
               </a>
               <div class="sw-mini-product__details">
                 <a href="{{ product.url }}" class="sw-mini-product__title">{{ product.title }}</a>
