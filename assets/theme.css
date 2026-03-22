@@ -3,7 +3,7 @@
 /* 1. Typography: @font-face */
 @font-face {
   font-family: 'Pikabu';
-  src: url('./fonts/Pikabu.ttf') format('truetype');
+  src: url('Pikabu.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -11,7 +11,7 @@
 
 @font-face {
   font-family: 'Coolvetica';
-  src: url('./fonts/Coolvetica.otf') format('opentype');
+  src: url('Coolvetica.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
