@@ -1,8 +1,21 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
       "type": "hero-banner",
-      "settings": {}
+      "settings": {
+        "image": "shopify://shop_images/8ff7442d1280e24abc6e7e7c3cb9ad13.jpg",
+        "cta_label": "View More",
+        "cta_link": ""
+      }
     },
     "collection_grid_1": {
       "type": "collection-grid",
@@ -11,7 +24,8 @@
         "label": "ETERNL DROP",
         "title": "T-SHIRTS",
         "limit": 4,
-        "columns_desktop": 4
+        "columns_desktop": 4,
+        "show_view_all": true
       }
     },
     "collection_grid_2": {
@@ -21,12 +35,21 @@
         "label": "YUNG CAPSULE",
         "title": "HOODIES",
         "limit": 4,
-        "columns_desktop": 4
+        "columns_desktop": 4,
+        "show_view_all": true
       }
     },
     "text_statement": {
       "type": "text-statement",
-      "settings": {}
+      "settings": {
+        "eyebrow": "ESTABLISHED 2021",
+        "heading": "MINIMAL STREETWEAR DONE RIGHT",
+        "body": "<p>A local audience approach without being apologetic about it. We build capsule drops designed to sell out in minutes.</p>",
+        "font": "heading",
+        "alignment": "center",
+        "cta_label": "READ THE STORY",
+        "cta_link": ""
+      }
     }
   },
   "order": [
