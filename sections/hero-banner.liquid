@@ -71,6 +71,14 @@
          decoding="async"
          width="{{ section.settings.image.width }}"
          height="{{ section.settings.image.height }}">
+  {%- else -%}
+    <img src="{{ 'banner-v1.0.webp' | asset_url }}"
+         alt="Hero Banner"
+         class="sw-hero-comic__img"
+         loading="eager"
+         decoding="async"
+         width="1366"
+         height="768">
   {%- endif -%}
 
   <div class="sw-hero-comic__content-wrapper">
