@@ -12,7 +12,7 @@
     "hero": {
       "type": "hero-banner",
       "settings": {
-        "image": "shopify://shop_images/8ff7442d1280e24abc6e7e7c3cb9ad13.jpg",
+        "image": "shopify://shop_images/banner-v1.0.webp",
         "cta_label": "View More",
         "cta_link": ""
       }
