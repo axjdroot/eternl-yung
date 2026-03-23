@@ -10,35 +10,42 @@
     min-height: 400px;
   }
 
-  /* Full Image Mode: Aspect Ratio */
+  /* Full Image Mode: Image defines height */
   {%- if section.settings.full_image -%}
     .sw-hero-comic {
       height: auto;
-      aspect-ratio: 1366 / 768;
     }
-    @media (max-width: 749px) {
-      .sw-hero-comic {
-        aspect-ratio: 4 / 5; /* Standard mobile portrait ratio */
-      }
+    .sw-hero-comic__img-wrapper {
+      position: relative;
+      width: 100%;
+    }
+    .sw-hero-comic__img {
+      position: relative;
+      top: auto;
+      left: auto;
+      transform: none;
+      width: 100%;
+      height: auto;
+      object-fit: initial;
     }
   {%- else -%}
     .sw-hero-comic {
       height: calc(100svh - 64px - 36px);
     }
+    .sw-hero-comic__img-wrapper {
+      position: absolute;
+      inset: 0;
+    }
+    .sw-hero-comic__img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   {%- endif -%}
-
-  .sw-hero-comic__img-wrapper {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-  }
-
-  .sw-hero-comic__img {
-    width: 100%;
-    height: 100%;
-    object-fit: {%- if section.settings.full_image -%}contain{%- else -%}cover{%- endif -%};
-    display: block;
-  }
 
   .sw-hero-comic__img--mobile {
     display: none;
