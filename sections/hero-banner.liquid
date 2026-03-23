@@ -149,8 +149,12 @@
 
   <div class="sw-hero-comic__content-wrapper">
     <div class="sw-hero-comic__tag-wrapper">
-      <p class="sw-hero-comic__tag-sub">AWKWRD AUTHENTIC<br>AN EXPERIMENT OF AWKWRD FACTORY<br>4245,63-B, 12, WX</p>
-      <h2 class="sw-hero-comic__tag-title">OTAKU IN WEED</h2>
+      <p class="sw-hero-comic__tag-sub">
+        {{ section.settings.tag_sub | default: 'ETERNL YUNG<br>A FRAGMENT OF YUNG VISION<br>2000//09-X, 24, EY' }}
+      </p>
+      <h2 class="sw-hero-comic__tag-title">
+        {{ section.settings.tag_title | default: 'LOST IN THE MATRIX' }}
+      </h2>
     </div>
     
     {%- if section.settings.cta_link != blank -%}
@@ -181,6 +185,19 @@
       "id": "full_image",
       "label": "Show Full Image (No Cropping)",
       "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "tag_sub",
+      "label": "Tag Sub-text",
+      "default": "ETERNL YUNG\nA FRAGMENT OF YUNG VISION\n2000//09-X, 24, EY",
+      "info": "Use <br> or new lines for line breaks"
+    },
+    {
+      "type": "text",
+      "id": "tag_title",
+      "label": "Tag Title",
+      "default": "LOST IN THE MATRIX"
     },
     {
       "type": "text",
