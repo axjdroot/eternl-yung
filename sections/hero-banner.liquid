@@ -104,9 +104,41 @@
     width: 18px;
     height: 18px;
   }
+
+  /* YUNG SOUL Warped Text */
+  .sw-hero-brand-warp {
+    position: absolute;
+    top: var(--sp-8);
+    left: 50%;
+    transform: translateX(-50%) perspective(400px) scaleX(1.3) skewX(-15deg);
+    z-index: 10;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .sw-hero-brand-warp__text {
+    font-family: 'Kingthings Spikeless', cursive;
+    font-size: clamp(48px, 10vw, 120px);
+    color: #000000;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    /* Simulate horizontal warp bulge */
+    filter: drop-shadow(0 0 1px rgba(0,0,0,0.1));
+  }
+  @media (max-width: 749px) {
+    .sw-hero-brand-warp {
+      top: var(--sp-12);
+      transform: translateX(-50%) perspective(400px) scaleX(1.1) skewX(-10deg);
+    }
+  }
 {%- endstyle -%}
 
 <section class="sw-hero-comic sw-reveal">
+  {%- if section.settings.warp_text != blank -%}
+    <div class="sw-hero-brand-warp">
+      <h1 class="sw-hero-brand-warp__text">{{ section.settings.warp_text }}</h1>
+    </div>
+  {%- endif -%}
   <div class="sw-hero-comic__img-wrapper">
     {%- comment -%} Desktop Image {%- endcomment -%}
     {%- if section.settings.image != blank -%}
@@ -196,6 +228,12 @@
       "label": "Tag Sub-text",
       "default": "ETERNL YUNG\nA FRAGMENT OF YUNG VISION\n2000//09-X, 24, EY",
       "info": "Use <br> or new lines for line breaks"
+    },
+    {
+      "type": "text",
+      "id": "warp_text",
+      "label": "Middle Warp Text",
+      "default": "YUNG SOUL"
     },
     {
       "type": "text",

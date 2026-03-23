@@ -17,6 +17,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Kingthings Spikeless';
+  src: url('Kingthings Spikeless.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* 2. Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Outfit:wght@300;400;600&family=Space+Grotesk:wght@600&family=Space+Mono&display=swap');
 
