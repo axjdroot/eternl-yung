@@ -1,24 +1,58 @@
 {%- style -%}
   .sw-hero-comic {
     position: relative;
-    height: calc(100svh - 64px - 36px); /* subtract header + ann. bar */
     width: 100%;
     background-color: #388D73;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    min-height: 400px;
   }
-  .sw-hero-comic__img {
+
+  /* Full Image Mode: Aspect Ratio */
+  {%- if section.settings.full_image -%}
+    .sw-hero-comic {
+      height: auto;
+      aspect-ratio: 1366 / 768;
+    }
+    @media (max-width: 749px) {
+      .sw-hero-comic {
+        aspect-ratio: 375 / 600; /* Default mobile aspect ratio */
+      }
+    }
+  {%- else -%}
+    .sw-hero-comic {
+      height: calc(100svh - 64px - 36px);
+    }
+  {%- endif -%}
+
+  .sw-hero-comic__img-wrapper {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    inset: 0;
     z-index: 1;
   }
+
+  .sw-hero-comic__img {
+    width: 100%;
+    height: 100%;
+    object-fit: {%- if section.settings.full_image -%}contain{%- else -%}cover{%- endif -%};
+    display: block;
+  }
+
+  .sw-hero-comic__img--mobile {
+    display: none;
+  }
+
+  @media (max-width: 749px) {
+    .sw-hero-comic__img--desktop {
+      display: none;
+    }
+    .sw-hero-comic__img--mobile {
+      display: block;
+    }
+  }
+
   .sw-hero-comic__content-wrapper {
     position: absolute;
     bottom: var(--sp-8);
@@ -49,6 +83,9 @@
     line-height: 1.2;
     opacity: 0.8;
   }
+  .sw-hero-comic__cta {
+    display: flex;
+    align-items: center;
     gap: var(--sp-2);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
@@ -63,23 +100,45 @@
 {%- endstyle -%}
 
 <section class="sw-hero-comic sw-reveal">
-  {%- if section.settings.image != blank -%}
-    <img src="{{ section.settings.image | image_url: width: 2400 }}"
-         alt="Hero Banner"
-         class="sw-hero-comic__img"
-         loading="eager"
-         decoding="async"
-         width="{{ section.settings.image.width }}"
-         height="{{ section.settings.image.height }}">
-  {%- else -%}
-    <img src="{{ 'banner-v1.0.webp' | asset_url }}"
-         alt="Hero Banner"
-         class="sw-hero-comic__img"
-         loading="eager"
-         decoding="async"
-         width="1366"
-         height="768">
-  {%- endif -%}
+  <div class="sw-hero-comic__img-wrapper">
+    {%- comment -%} Desktop Image {%- endcomment -%}
+    {%- if section.settings.image != blank -%}
+      <img src="{{ section.settings.image | image_url: width: 2400 }}"
+           alt="Hero Banner Desktop"
+           class="sw-hero-comic__img sw-hero-comic__img--desktop"
+           loading="eager"
+           decoding="async"
+           width="{{ section.settings.image.width }}"
+           height="{{ section.settings.image.height }}">
+    {%- else -%}
+      <img src="{{ 'banner-v1.1-d.webp' | asset_url }}"
+           alt="Hero Banner Desktop"
+           class="sw-hero-comic__img sw-hero-comic__img--desktop"
+           loading="eager"
+           decoding="async"
+           width="1366"
+           height="768">
+    {%- endif -%}
+
+    {%- comment -%} Mobile Image {%- endcomment -%}
+    {%- if section.settings.image_mobile != blank -%}
+      <img src="{{ section.settings.image_mobile | image_url: width: 1200 }}"
+           alt="Hero Banner Mobile"
+           class="sw-hero-comic__img sw-hero-comic__img--mobile"
+           loading="eager"
+           decoding="async"
+           width="{{ section.settings.image_mobile.width }}"
+           height="{{ section.settings.image_mobile.height }}">
+    {%- else -%}
+      <img src="{{ 'banner-v1.0.webp' | asset_url }}"
+           alt="Hero Banner Mobile"
+           class="sw-hero-comic__img sw-hero-comic__img--mobile"
+           loading="eager"
+           decoding="async"
+           width="1366"
+           height="768">
+    {%- endif -%}
+  </div>
 
   <div class="sw-hero-comic__content-wrapper">
     <div class="sw-hero-comic__tag-wrapper">
@@ -103,7 +162,18 @@
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Background Image"
+      "label": "Desktop Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile Image"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_image",
+      "label": "Show Full Image (No Cropping)",
+      "default": true
     },
     {
       "type": "text",
