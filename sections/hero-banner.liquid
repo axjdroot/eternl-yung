@@ -150,7 +150,11 @@
   <div class="sw-hero-comic__content-wrapper">
     <div class="sw-hero-comic__tag-wrapper">
       <p class="sw-hero-comic__tag-sub">
-        {{ section.settings.tag_sub | default: 'ETERNL YUNG<br>A FRAGMENT OF YUNG VISION<br>2000//09-X, 24, EY' }}
+        {%- if section.settings.tag_sub != blank -%}
+          {{ section.settings.tag_sub | newline_to_br }}
+        {%- else -%}
+          ETERNL YUNG<br>A FRAGMENT OF YUNG VISION<br>2000//09-X, 24, EY
+        {%- endif -%}
       </p>
       <h2 class="sw-hero-comic__tag-title">
         {{ section.settings.tag_title | default: 'LOST IN THE MATRIX' }}
